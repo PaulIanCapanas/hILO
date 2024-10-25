@@ -2,6 +2,7 @@ import { View, Text, Button, TextInput, Alert } from "react-native";
 import { useState, useEffect, useCallback } from 'react'
 import { auth } from "@/firebase/initializeFirebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import uploadDocument from "@/helpers/firebase/uploadDocument";
 
 export default function SignupScreen() {
   const [firstName, setFirstName] = useState<string>("")
@@ -11,13 +12,17 @@ export default function SignupScreen() {
   
   const handlesubmit = async () => {
     try {
+      await uploadDocument("User Account", {
+        first: firstName,
+        last: lastName
+      })
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
       Alert.alert(`Signed up successfully: ${userCredential}`)
     } catch (error) {
       Alert.alert("Registration failed!")
     }
   }
-
+  
   return (
     <View>
       <Text>Sign Up</Text>
