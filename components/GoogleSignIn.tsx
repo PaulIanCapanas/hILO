@@ -10,7 +10,7 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function GoogleSignIn() {
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    clientId: "644044288240-fvg1sfjskh5ih21a935f990ati6dvln1.apps.googleusercontent.com",
+    clientId: process.env.EXPO_PUBLIC_CLIENT_ID,
   });
 
   React.useEffect(() => {
