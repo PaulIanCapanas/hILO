@@ -4,7 +4,7 @@ import { signInWithCredential, GoogleAuthProvider } from "firebase/auth";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import { auth } from "@/firebase/initializeFirebase";
-
+import uploadDocument from "@/helpers/firebase/uploadDocument";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -19,6 +19,17 @@ export default function GoogleSignIn() {
       const credential = GoogleAuthProvider.credential(id_token);
       signInWithCredential(auth, credential)
         .then((userCredential) => {
+          const userData = {
+            name: userCredential.user.displayName,
+            photo: userCredential.user.photoURL,
+          };
+          uploadDocument("User Account", userData)
+            .then((docId) => {
+              console.log("User data uploaded successfully with ID:", docId);
+            })
+            .catch((error) => {
+              console.error("Error uploading user data:", error);
+            });
           console.log("User signed in: ", userCredential.user);
         })
         .catch((error) => {
