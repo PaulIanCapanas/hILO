@@ -1,12 +1,24 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { Stack, useRouter } from "expo-router";
 import GoogleSignIn from "@/components/GoogleSignIn";
 
 export default function Page() {
+  const router = useRouter();
+
+  function handleNavigate() {
+    router.push("/login");
+  }
   return (
-    <View style={styles.container}>
+    <View style={styles.container} options={{ headerShown: false }}>
       <View style={styles.main}>
         <Text style={styles.title}>Hello World</Text>
         <Text style={styles.subtitle}>This is the first page of your</Text>
+        <TouchableOpacity
+          className="p-20 border border-white"
+          onPress={handleNavigate}
+        >
+          <Text className="text-white text-xl font-boldc">Go to login</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
