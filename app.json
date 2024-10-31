@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "hilo-app",
     "userInterfaceStyle": "automatic",
     "entryPoint": "./node_modules/expo-router/entry",
     "splash": {
@@ -17,6 +17,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "hilo.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
