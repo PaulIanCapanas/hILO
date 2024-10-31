@@ -3,8 +3,11 @@ import { useState, useEffect, useMemo } from "react";
 import { auth } from "@/firebase/initializeFirebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import uploadDocument from "@/helpers/firebase/uploadDocument";
+import { useRouter } from "expo-router";
+import { Routes } from "@/enums/routes";
 
 export default function SignupScreen() {
+  const router = useRouter()
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -41,6 +44,7 @@ export default function SignupScreen() {
         password
       );
       Alert.alert(`Signed up successfully: ${userCredential}`);
+      router.push(Routes.HOME)
     } catch (error) {
       Alert.alert("Registration failed!");
     }
