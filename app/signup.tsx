@@ -1,5 +1,5 @@
 import { View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { auth } from "@/firebase/initializeFirebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import uploadDocument from "@/helpers/firebase/uploadDocument";

@@ -3,8 +3,11 @@ import { auth } from "@/firebase/initializeFirebase";
 import { useState, useMemo } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import GoogleSignIn from "@/components/GoogleSignIn";
+import { Routes } from "@/enums/routes"
+import { useRouter } from "expo-router"
 
 export default function LoginScreen() {
+  const router = useRouter()
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -27,6 +30,7 @@ export default function LoginScreen() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       Alert.alert(`User has signed in!, Welcome ${email}`);
+      router.push(Routes.HOME)
     } catch (error) {
       Alert.alert("User sign in has failed");
     }
