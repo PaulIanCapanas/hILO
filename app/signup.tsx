@@ -1,5 +1,5 @@
 import { View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { auth } from "@/firebase/initializeFirebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import uploadDocument from "@/helpers/firebase/uploadDocument";
@@ -7,7 +7,7 @@ import { useRouter } from "expo-router";
 import { Routes } from "@/enums/routes";
 
 export default function SignupScreen() {
-  const router = useRouter()
+  const router = useRouter();
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -15,18 +15,32 @@ export default function SignupScreen() {
 
   const validateForm = useMemo(() => {
     return () => {
-      if (!firstName.trim()) Alert.alert("First name is required");
+      if (!firstName.trim()) {
+        Alert.alert("First name is required");
+        return false;
+      }
 
-      if (!lastName.trim()) Alert.alert("Last name is required");
+      if (!lastName.trim()) {
+        Alert.alert("Last name is required");
+        return false;
+      }
+      if (!email.trim()) {
+        Alert.alert("Email is required");
+        return false;
+      } else if (!/\S+@\S+\.\S+/.test(email)) {
+        Alert.alert("Invalid email format");
+        return false;
+      }
 
-      if (!email.trim()) Alert.alert("Email is required");
-      else if (!/\S+@\S+\.\S+/.test(email)) Alert.alert("Invalid email format");
-
-      if (!password.trim()) Alert.alert("Password is required");
-      else if (password.length < 8)
+      if (!password.trim()) {
+        Alert.alert("Password is required");
+        return false;
+      } else if (password.length < 8) {
         Alert.alert("Password must at least be 8 characters long");
+        return false;
+      }
 
-      return true
+      return true;
     };
   }, [firstName, lastName, email, password]);
 
@@ -38,13 +52,9 @@ export default function SignupScreen() {
         firstName: firstName,
         lastName: lastName,
       });
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      Alert.alert(`Signed up successfully: ${userCredential}`);
-      router.push(Routes.HOME)
+      await createUserWithEmailAndPassword(auth, email, password);
+      Alert.alert("Signed up successfully!");
+      router.push(Routes.HOME);
     } catch (error) {
       Alert.alert("Registration failed!");
     }
@@ -95,10 +105,11 @@ export default function SignupScreen() {
           />
         </View>
         <TouchableOpacity onPress={handleSubmit}>
-          <Text className="bg-blue-500 text-white px-4 py-2 rounded">Register</Text>
+          <Text className="bg-blue-500 text-white px-4 py-2 rounded">
+            Register
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
-   
   );
 }
