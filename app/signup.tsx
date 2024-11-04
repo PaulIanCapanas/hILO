@@ -15,16 +15,30 @@ export default function SignupScreen() {
 
   const validateForm = useMemo(() => {
     return () => {
-      if (!firstName.trim()) Alert.alert("First name is required");
+      if (!firstName.trim()) {
+        Alert.alert("First name is required");
+        return false;
+      }
 
-      if (!lastName.trim()) Alert.alert("Last name is required");
+      if (!lastName.trim()) {
+        Alert.alert("Last name is required");
+        return false;
+      }
+      if (!email.trim()) {
+        Alert.alert("Email is required");
+        return false;
+      } else if (!/\S+@\S+\.\S+/.test(email)) {
+        Alert.alert("Invalid email format");
+        return false;
+      }
 
-      if (!email.trim()) Alert.alert("Email is required");
-      else if (!/\S+@\S+\.\S+/.test(email)) Alert.alert("Invalid email format");
-
-      if (!password.trim()) Alert.alert("Password is required");
-      else if (password.length < 8)
+      if (!password.trim()) {
+        Alert.alert("Password is required");
+        return false;
+      } else if (password.length < 8) {
         Alert.alert("Password must at least be 8 characters long");
+        return false;
+      }
 
       return true;
     };
