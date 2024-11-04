@@ -59,9 +59,13 @@ export default function GoogleSignIn() {
     if (response?.type === "success") {
       const { id_token } = response.params;
       const credential = GoogleAuthProvider.credential(id_token);
-      signInWithCredential(auth, credential).catch((error) => {
-        console.error("Google Sign-In Error: ", error);
-      });
+      signInWithCredential(auth, credential)
+        .then((userCredential) => {
+          console.log("User signed in: ", userCredential.user);
+        })
+        .catch((error) => {
+          console.error("Google Sign-In Error: ", error);
+        });
     }
   }, [response]);
 
