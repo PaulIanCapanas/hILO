@@ -3,23 +3,31 @@ import { auth } from "@/firebase/initializeFirebase";
 import { useState, useMemo } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import GoogleSignIn from "@/components/GoogleSignIn";
-import { Routes } from "@/enums/routes"
-import { useRouter } from "expo-router"
+import { Routes } from "@/enums/routes";
+import { useRouter } from "expo-router";
 
 export default function LoginScreen() {
-  const router = useRouter()
+  const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const validateForm = useMemo(() => {
     return () => {
-      if (!email.trim()) Alert.alert("Email is required");
-      else if (!/\S+@\S+\.\S+/.test(email)) Alert.alert("Invalid email format");
+      if (!email.trim()) {
+        Alert.alert("Email is required");
+        return false;
+      } else if (!/\S+@\S+\.\S+/.test(email)) {
+        Alert.alert("Invalid email format");
+        return false;
+      }
 
-      if (!password.trim()) Alert.alert("Password is required");
-      else if (password.length < 8)
+      if (!password.trim()) {
+        Alert.alert("Password is required");
+        return false;
+      } else if (password.length < 8) {
         Alert.alert("Password must at least be 8 characters long");
-
+        return false;
+      }
       return true;
     };
   }, [email, password]);
@@ -30,7 +38,7 @@ export default function LoginScreen() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       Alert.alert(`User has signed in!, Welcome ${email}`);
-      router.push(Routes.HOME)
+      router.push(Routes.HOME);
     } catch (error) {
       Alert.alert("User sign in has failed");
     }
@@ -59,7 +67,9 @@ export default function LoginScreen() {
           />
         </View>
         <TouchableOpacity onPress={handleSubmit}>
-          <Text className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Login</Text>
+          <Text className="bg-blue-500 text-white px-4 py-2 rounded mb-4">
+            Login
+          </Text>
         </TouchableOpacity>
         <View className="mb-4 justify-center items-center">
           <Text className="text-gray-500">Or</Text>
