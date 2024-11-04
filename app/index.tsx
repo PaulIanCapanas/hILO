@@ -6,8 +6,11 @@ import { Routes } from "@/enums/routes";
 export default function Page() {
   const router = useRouter();
 
-  function handleNavigate() {
+  function handleNavigateToLogin() {
     router.push(Routes.LOGIN);
+  }
+  function handleNavigateToSignUp() {
+    router.push(Routes.SIGNUP);
   }
   return (
     <View style={styles.container}>
@@ -16,9 +19,15 @@ export default function Page() {
         <Text style={styles.subtitle}>This is the first page of your</Text>
         <TouchableOpacity
           className="p-20 border border-white"
-          onPress={handleNavigate}
+          onPress={handleNavigateToLogin}
         >
           <Text className="text-white text-xl font-boldc">Go to login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="p-20 border border-white"
+          onPress={handleNavigateToSignUp}
+        >
+          <Text className="text-white text-xl font-boldc">Go to</Text>
         </TouchableOpacity>
       </View>
     </View>
