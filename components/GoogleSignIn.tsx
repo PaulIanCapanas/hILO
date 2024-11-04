@@ -5,6 +5,8 @@ import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import { auth } from "@/firebase/initializeFirebase";
 import uploadDocument from "@/helpers/firebase/uploadDocument";
+import { useRouter } from "expo-router";
+import { Routes } from "@/enums/routes";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -12,6 +14,7 @@ export default function GoogleSignIn() {
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     clientId: process.env.EXPO_PUBLIC_CLIENT_ID,
   });
+  const router = useRouter();
 
   React.useEffect(() => {
     if (response?.type === "success") {
@@ -26,6 +29,7 @@ export default function GoogleSignIn() {
           uploadDocument("User Account", userData)
             .then((docId) => {
               console.log("User data uploaded successfully with ID:", docId);
+              router.push(Routes.HOME);
             })
             .catch((error) => {
               console.error("Error uploading user data:", error);

@@ -1,5 +1,5 @@
 import { Text } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, Stack } from "expo-router";
 import { Routes } from "@/enums/routes";
 
 import { useSession } from "@/contexts/AuthContext";
@@ -15,4 +15,8 @@ export default function AppLayout() {
   if (!session) {
     return router.push(Routes.LOGIN);
   }
+
+  return (
+    <Stack/>
+  );
 }

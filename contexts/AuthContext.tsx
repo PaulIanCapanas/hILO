@@ -1,6 +1,6 @@
 import React, { createContext, useContext, type PropsWithChildren, useEffect, useState } from "react";
 import { auth } from "@/firebase/initializeFirebase";
-import { onAuthStateChanged, setPersistence, browserSessionPersistence } from "firebase/auth";
+import { onAuthStateChanged, setPersistence, browserLocalPersistence } from "firebase/auth";
 
 interface AuthContextType {
   logOut: () => void,
@@ -30,8 +30,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<string | null>(null);
 
   useEffect(() => {
-    //user is signed in as long as tab is open
-    setPersistence(auth, browserSessionPersistence)
+    //user is signed in until signed out
+    setPersistence(auth, browserLocalPersistence)
       .then(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
           setSession(user ? user.uid : null);
