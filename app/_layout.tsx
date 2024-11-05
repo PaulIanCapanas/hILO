@@ -41,6 +41,7 @@ export default function RootLayout() {
         <Stack.Screen name="(app)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
         <Stack.Screen name={Routes.LOGIN} options={{ headerShown: false }} />
+        <Stack.Screen name={Routes.SIGNUP} options={{ headerShown: false }} />
         <Stack.Screen name={Routes.USERPROFILE} options={{ headerShown: false}} />
       </Stack>
     </ThemeProvider>

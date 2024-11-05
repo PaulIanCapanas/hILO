@@ -38,7 +38,7 @@ export default function LoginScreen() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       Alert.alert(`User has signed in!, Welcome ${email}`);
-      router.push(Routes.HOME);
+      router.push(`/${Routes.HOME}`);
     } catch (error) {
       Alert.alert("User sign in has failed");
     }

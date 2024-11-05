@@ -54,7 +54,7 @@ export default function SignupScreen() {
       });
       await createUserWithEmailAndPassword(auth, email, password);
       Alert.alert("Signed up successfully!");
-      router.push(Routes.HOME);
+      router.push(`/${Routes.LOGIN}`);
     } catch (error) {
       Alert.alert("Registration failed!");
     }
