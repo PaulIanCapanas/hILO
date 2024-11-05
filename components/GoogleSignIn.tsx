@@ -51,8 +51,6 @@ export default function GoogleSignIn () {
         } else {
           console.log('User data already exists.')
         }
-
-        // handleNavigate();
       }
     })
     return () => unregistered()
@@ -62,6 +60,7 @@ export default function GoogleSignIn () {
     if (response?.type === 'success') {
       const { id_token } = response.params
       const credential = GoogleAuthProvider.credential(id_token)
+      // handleNavigate();
       signInWithCredential(auth, credential)
         .then(userCredential => {
           console.log('User signed in: ', userCredential.user)
@@ -73,17 +72,22 @@ export default function GoogleSignIn () {
   }, [response])
 
   return (
+    <View className='flex-1 shadow p-4 max-w-md'>
     <TouchableOpacity
       disabled={!request}
-      className='flex items-center' 
+      style={{ flexDirection: 'row', padding: 10, backgroundColor: '#EDE9E8' }}
+      className='items-center justify-center space-x-2 rounded-lg'
       onPress={() => {
-        promptAsync();
+        promptAsync()
       }}
     >
-      <Image
-        source={require('../assets/images/google-logo.png')}
-        style={{ width: 200, height: 50 }}
-      />
+        <Image
+          source={require('../assets/images/google-logo.png')}
+          style={{ width: 20, height: 20, marginRight: 4 }}
+        />
+        <Text className='text-black text-base'>Sign in with Google</Text>
+  
     </TouchableOpacity>
-  );
+    </View>
+  )
 }
