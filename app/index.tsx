@@ -7,10 +7,10 @@ export default function Page() {
   const router = useRouter();
 
   function handleNavigateToLogin() {
-    router.push(Routes.LOGIN);
+    router.push(`/${Routes.LOGIN}`);
   }
   function handleNavigateToSignUp() {
-    router.push(Routes.SIGNUP);
+    router.push(`/${Routes.SIGNUP}`);
   }
   return (
     <View style={styles.container}>
