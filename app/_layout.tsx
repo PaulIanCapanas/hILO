@@ -12,6 +12,7 @@ import "../global.css";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Routes } from "@/enums/routes";
+import { SessionProvider } from "@/contexts/AuthContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -33,13 +34,17 @@ export default function RootLayout() {
   }
 
   return (
+    <SessionProvider>
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(app)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
         <Stack.Screen name={Routes.LOGIN} options={{ headerShown: false }} />
         <Stack.Screen name={Routes.SIGNUP} options={{ headerShown: false }} />
+        <Stack.Screen name={Routes.USERPROFILE} options={{ headerShown: false}} />
       </Stack>
     </ThemeProvider>
+    </SessionProvider>  
   );
 }
