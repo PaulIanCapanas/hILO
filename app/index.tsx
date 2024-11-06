@@ -1,6 +1,5 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import { Stack, useRouter } from "expo-router";
-import GoogleSignIn from "@/components/GoogleSignIn";
 import { Routes } from "@/enums/routes";
 
 export default function Page() {
@@ -12,47 +11,37 @@ export default function Page() {
   function handleNavigateToSignUp() {
     router.push(`/${Routes.SIGNUP}`);
   }
+
   return (
-    <View style={styles.container}>
-      <View style={styles.main}>
-        <Text style={styles.title}>Hello World</Text>
-        <Text style={styles.subtitle}>This is the first page of your</Text>
+    <View className="flex-1 bg-gray-100">
+      <Stack.Screen options={{ headerShown: false }} />
+      
+      <View className="absolute top-12 right-4 flex-row">
         <TouchableOpacity
-          className="p-20 border border-white"
           onPress={handleNavigateToLogin}
+          className="bg-blue-500 px-4 py-2 rounded-lg mr-2"
         >
-          <Text className="text-white text-xl font-boldc">Go to login</Text>
+          <Text className="text-white font-semibold">Login</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className="p-20 border border-white"
           onPress={handleNavigateToSignUp}
+          className="bg-green-500 px-4 py-2 rounded-lg"
         >
-          <Text className="text-white text-xl font-boldc">Go to</Text>
+          <Text className="text-white font-semibold">Sign Up</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View className="flex-1 justify-center items-center">
+      <Text className="text-4xl font-bold">Welcome to hILO!</Text>
+        <Text className=" text-2xl mb-4 "> Mark Renzo Tan is a Good kid</Text>
+        
+        <TouchableOpacity
+          onPress={handleNavigateToLogin}
+          className="bg-purple-600 px-8 py-3 rounded-full"
+        >
+          <Text className="text-white font-semibold text-lg">Get Started</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    padding: 24,
-  },
-  main: {
-    flex: 1,
-    justifyContent: "center",
-    maxWidth: 960,
-    marginHorizontal: "auto",
-  },
-  title: {
-    fontSize: 64,
-    fontWeight: "bold",
-  },
-  subtitle: {
-    fontSize: 36,
-    color: "#38434D",
-  },
-});
-                              

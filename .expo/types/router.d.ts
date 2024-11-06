@@ -6,7 +6,7 @@ export * from 'expo-router';
 declare module 'expo-router' {
   export namespace ExpoRouter {
     export interface __routes<T extends string = string> extends Record<string, unknown> {
-      StaticRoutes: `/` | `/(app)` | `/(app)/userProfile` | `/(app)\userProfile` | `/(tabs)` | `/(tabs)/` | `/(tabs)/explore` | `/..\components\GoogleSignIn` | `/_sitemap` | `/explore` | `/login` | `/signup` | `/userProfile`;
+      StaticRoutes: `/` | `/(app)` | `/(app)/userProfile` | `/(tabs)` | `/(tabs)/` | `/(tabs)/explore` | `/_sitemap` | `/explore` | `/login` | `/signup` | `/userProfile`;
       DynamicRoutes: never;
       DynamicRouteTemplate: never;
     }
