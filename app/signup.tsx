@@ -1,10 +1,11 @@
-import { View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
-import { useState, useMemo } from "react";
+import { ScrollView, View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
+import { useState, useEffect, useMemo } from "react";
 import { auth } from "@/firebase/initializeFirebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import uploadDocument from "@/helpers/firebase/uploadDocument";
 import { useRouter } from "expo-router";
 import { Routes } from "@/enums/routes";
+import queryDocument from "@/helpers/firebase/queryDocument";
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -12,6 +13,37 @@ export default function SignupScreen() {
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  useEffect(() => {
+    const unregistered = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const existingUsers = await queryDocument(
+          "User Account",
+          "uid",
+          user.uid
+        )
+
+        if (existingUsers.length === 0) {
+          const userData = {
+            firstName: firstName,
+            lastName: lastName,
+            uid: user.uid,
+          }
+          uploadDocument("User Account", userData)
+            .then((documentId) => {
+              console.log("User data uploaded successfully with ID:", documentId)
+              router.push(`/${Routes.HOME}`);
+            })
+            .catch((error) => {
+              console.log("Error uploading user data:", error)
+            })
+        } else {
+          console.log("User data already exists.")
+        }
+      }
+    })
+    return () => unregistered()
+  }, [firstName, lastName])
 
   const validateForm = useMemo(() => {
     return () => {
@@ -48,68 +80,65 @@ export default function SignupScreen() {
     if (!validateForm()) return;
 
     try {
-      await uploadDocument("User Account", {
-        firstName: firstName,
-        lastName: lastName,
-      });
       await createUserWithEmailAndPassword(auth, email, password);
       Alert.alert("Signed up successfully!");
-      router.push(`/${Routes.LOGIN}`);
     } catch (error) {
       Alert.alert("Registration failed!");
     }
   };
 
   return (
-    <View className="flex-1 items-center justify-center bg-slate-100">
-      <View className="w-full max-w-md px-5 py-8 bg-gray-100 rounded-lg shadow-md justify-center items-center">
-        <Text className="text-4xl mb-4">hILO</Text>
-        <View className="mb-4">
-          <Text>First Name:</Text>
-          <TextInput
-            className="text-gray-900 border"
-            placeholder="First Name"
-            value={firstName}
-            onChangeText={(text) => setFirstName(text)}
-            autoCapitalize="words"
-          />
+    <View className="h-screen">
+      <ScrollView className="bg-slate-100">
+        <View className="w-full max-w-md px-5 py-8 bg-gray-100 rounded-lg shadow-md">
+          <Text className="text-4xl mb-4">hILO</Text>
+          <View className="mb-4">
+            <Text>First Name:</Text>
+            <TextInput
+              className="text-gray-900 border"
+              placeholder="First Name"
+              value={firstName}
+              onChangeText={(text) => setFirstName(text)}
+              autoCapitalize="words"
+            />
+          </View>
+          <View className="mb-4">
+            <Text>Last Name:</Text>
+            <TextInput
+              className="text-gray-900 border"
+              placeholder="Last Name"
+              value={lastName}
+              onChangeText={(text) => setLastName(text)}
+              autoCapitalize="words"
+            />
+          </View>
+          <View className="mb-4">
+            <Text>Enter your Email</Text>
+            <TextInput
+              className="text-gray-900 border"
+              placeholder="Email"
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+              keyboardType="email-address"
+            />
+          </View>
+          <View className="mb-4">
+            <Text>Enter your Password</Text>
+            <TextInput
+              className="text-gray-900 border"
+              placeholder="Password"
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              secureTextEntry
+            />
+          </View>
+          <TouchableOpacity onPress={handleSubmit}>
+            <Text className="bg-blue-500 text-white text-center px-4 py-2 rounded">
+              Register
+            </Text>
+          </TouchableOpacity>
         </View>
-        <View className="mb-4">
-          <Text>Last Name:</Text>
-          <TextInput
-            className="text-gray-900 border"
-            placeholder="Last Name"
-            value={lastName}
-            onChangeText={(text) => setLastName(text)}
-            autoCapitalize="words"
-          />
-        </View>
-        <View className="mb-4">
-          <Text>Enter your Email</Text>
-          <TextInput
-            className="text-gray-900 border"
-            placeholder="Email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            keyboardType="email-address"
-          />
-        </View>
-        <View className="mb-4">
-          <Text>Enter your Password</Text>
-          <TextInput
-            className="text-gray-900 border"
-            placeholder="Password"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            secureTextEntry
-          />
-        </View>
-        <TouchableOpacity onPress={handleSubmit}>
-          <Text className="bg-blue-500 text-white px-4 py-2 rounded">
-            Register
-          </Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </View>
   );
 }
