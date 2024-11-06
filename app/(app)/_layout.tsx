@@ -13,8 +13,8 @@ export default function AppLayout() {
   }
 
   if (!session) {
-    return router.push(Routes.LOGIN);
-  }
+    return router.push(`/${Routes.LOGIN}`);
+  } 
 
   return (
     <Stack/>

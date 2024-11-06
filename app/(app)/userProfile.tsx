@@ -1,43 +1,54 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Image } from "react-native";
-import queryDocument from "@/helpers/firebase/queryDocument";
+import { useState, useEffect } from 'react';
+import { Button, Text, View, Image } from 'react-native';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/firebase/initializeFirebase'; 
+import queryDocument from '@/helpers/firebase/queryDocument'; 
+import { useSession } from '@/contexts/AuthContext';
 
-interface UserData {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  name?: string;
-  photo?: string;
-}
 
-export default function UserProfileScreen() {
-  const [user, setUser] = useState<UserData>({});
+export default function UserProfile() {
+  const [userData, setUserData] = useState<any>(null); 
+  const { logOut } = useSession()
 
   useEffect(() => {
-      const fetchUserData = async () => {
-      const data = await queryDocument("User Account", "firstName", "");
-      if (data.length > 0) {
-        setUser(data[0]);
-        console.log(user);
+    const unregistered = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const data = await queryDocument('User Account', 'uid', user.uid); 
+          if (data.length > 0) {
+            setUserData(data[0]);
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      } else {
+        setUserData(null); 
       }
-    };
-    fetchUserData();
-  }, []);
+    });
+
+    return () => unregistered(); 
+  }, []); 
+
+  const handleLogout = () => {
+    logOut(); 
+  };
+
+  if (!userData) {
+    return <View><Text>Loading user data...</Text></View>; 
+  }
 
   return (
     <View>
-      <Text className="text-black">
-        Name: {user.firstName && user.lastName
-          ? `${user.firstName} ${user.lastName}`
-          : user.name}
-      </Text>
-      <Text className="">
-        Email: {user.email}
-      </Text>
-      <Image
-        source={{ uri: user.photo }}
+         <Image
+        source={{ uri: userData.photo }}
         style={{ width: 100, height: 100 }}
       />
+      <Text>
+        Logged in as: {userData.firstName && userData.lastName ? `${userData.firstName} ${userData.lastName}` : userData.name}
+      </Text>
+      <View className='items-center max-w-md rounded-lg bg-red-500'>
+      <Button title="Logout" onPress={handleLogout} />
+      </View>
     </View>
   );
-}
+};

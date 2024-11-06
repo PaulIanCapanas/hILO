@@ -55,7 +55,6 @@ export default function GoogleSignIn() {
     if (response?.type === "success") {
       const { id_token } = response.params;
       const credential = GoogleAuthProvider.credential(id_token);
-      // handleNavigate();
       signInWithCredential(auth, credential)
         .then((userCredential) => {
           console.log("User signed in: ", userCredential.user);
@@ -68,7 +67,6 @@ export default function GoogleSignIn() {
   }, [response]);
 
   return (
-    <View className="flex-1 shadow p-4 max-w-md">
       <TouchableOpacity
         disabled={!request}
         style={{
@@ -76,7 +74,7 @@ export default function GoogleSignIn() {
           padding: 10,
           backgroundColor: "#EDE9E8",
         }}
-        className="items-center justify-center space-x-2 rounded-lg"
+        className="items-center justify-center shadow rounded-lg"
         onPress={() => {
           promptAsync();
         }}
@@ -87,6 +85,5 @@ export default function GoogleSignIn() {
         />
         <Text className="text-black text-base">Sign in with Google</Text>
       </TouchableOpacity>
-    </View>
   );
 }
