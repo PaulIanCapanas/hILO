@@ -32,8 +32,7 @@ export default function Page() {
       </View>
 
       <View className="flex-1 justify-center items-center">
-      <Text className="text-4xl font-bold">Welcome to hILO!</Text>
-        <Text className=" text-2xl mb-4 "> Mark Renzo Tan is a Good kid</Text>
+      <Text className="text-4xl font-bold mb-5">Welcome to hILO!</Text>
         
         <TouchableOpacity
           onPress={handleNavigateToLogin}
