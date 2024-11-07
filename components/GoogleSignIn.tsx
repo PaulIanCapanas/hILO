@@ -67,23 +67,20 @@ export default function GoogleSignIn() {
   }, [response]);
 
   return (
+   <View className="w-full">
       <TouchableOpacity
         disabled={!request}
-        style={{
-          flexDirection: "row",
-          padding: 10,
-          backgroundColor: "#EDE9E8",
-        }}
-        className="items-center justify-center shadow rounded-lg"
+        className="w-full flex-row items-center justify-center space-x-2 rounded-lg bg-white border border-gray-200 py-3 px-4"
         onPress={() => {
           promptAsync();
         }}
       >
         <Image
           source={require("../assets/images/google-logo.png")}
-          style={{ width: 20, height: 20, marginRight: 4 }}
+          style={{ width: 20, height: 20 }}
+          className="mr-2"
         />
-        <Text className="text-black text-base">Sign in with Google</Text>
+        <Text className="text-gray-700 text-base font-medium">Sign in with Google</Text>
       </TouchableOpacity>
   );
 }
