@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react"
 import { Image, View, TouchableOpacity, Text } from "react-native";
 import {
   signInWithCredential,
@@ -21,7 +21,7 @@ export default function GoogleSignIn() {
   });
   const router = useRouter();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const unregistered = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const existingUsers = await queryDocument(
@@ -51,7 +51,7 @@ export default function GoogleSignIn() {
     return () => unregistered();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (response?.type === "success") {
       const { id_token } = response.params;
       const credential = GoogleAuthProvider.credential(id_token);
