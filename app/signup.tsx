@@ -63,50 +63,52 @@ export default function SignupScreen() {
   return (
     <View className="h-screen">
       <ScrollView className="bg-slate-100">
-        <View className="w-full max-w-md px-5 py-8 bg-gray-100 rounded-lg shadow-md">
-          <Text className="text-4xl mb-4">hILO</Text>
+        <View className="w-full max-w-md px-5 py-64 bg-gray-100 rounded-lg shadow-md">
+          <Text className="text-4xl mb-4 text-center">hILO</Text>
           <View className="mb-4">
-            <Text>First Name:</Text>
+            <Text className="mb-2">First Name:</Text>
             <TextInput
-              className="text-gray-900 border"
-              placeholder="First Name"
+              className="h-12 text-gray-900 border px-2"
+              placeholder="John Matthew"
               value={firstName}
               onChangeText={(text) => setFirstName(text)}
               autoCapitalize="words"
             />
           </View>
           <View className="mb-4">
-            <Text>Last Name:</Text>
+            <Text className="mb-2">Last Name:</Text>
             <TextInput
-              className="text-gray-900 border"
-              placeholder="Last Name"
+              className="h-12 text-gray-900 border px-2"
+              placeholder="Doe"
               value={lastName}
               onChangeText={(text) => setLastName(text)}
               autoCapitalize="words"
             />
           </View>
           <View className="mb-4">
-            <Text>Enter your Email</Text>
+            <Text className="mb-2">Email</Text>
             <TextInput
-              className="text-gray-900 border"
-              placeholder="Email"
+              className="h-12 text-gray-900 border px-2"
+              placeholder="johndoe@email.com"
               value={email}
               onChangeText={(text) => setEmail(text)}
               keyboardType="email-address"
             />
           </View>
           <View className="mb-4">
-            <Text>Enter your Password</Text>
+            <Text>Password</Text>
             <TextInput
-              className="text-gray-900 border"
-              placeholder="Password"
+              className="h-12 text-gray-900 border px-2"
+              placeholder="********"
               value={password}
               onChangeText={(text) => setPassword(text)}
               secureTextEntry
             />
           </View>
-          <TouchableOpacity onPress={handleSubmit}>
-            <Text className="bg-blue-500 text-white text-center px-4 py-2 rounded">
+          <TouchableOpacity 
+            onPress={handleSubmit}
+            className="h-12 items-center justify-center bg-blue-500 px-4 py-2 rounded-lg mb-4">
+            <Text className=" text-white text-center">
               Register
             </Text>
           </TouchableOpacity>

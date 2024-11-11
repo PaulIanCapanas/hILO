@@ -47,28 +47,32 @@ export default function LoginScreen() {
   return (
     <View className="h-screen">
        <ScrollView className="bg-white">
-        <View className="w-screen max-w-md px-5 py-8 rounded-lg shadow-md">
-          <Text className="text-4xl mb-4">hILO</Text>
+        <View className="w-full max-w-md px-5 py-64 inset-0 justify-center align-middle">
+          <Text className="text-4xl mb-4 text-center">hILO</Text>
           <View className="mb-4">
-            <Text className="mb-2">Enter your Email:</Text>
+            <Text className="mb-2">Email:</Text>
             <TextInput
-              className="text-gray-900 border"
-              placeholder="Email"
+              className="h-12 text-gray-900 border rounded-md px-2"
+              placeholder="johndoe@email.com"
               value={email}
               onChangeText={(text) => setEmail(text)}
             />
           </View>
-          <View className="mb-4">
-            <Text className="mb-2">Enter your Password:</Text>
+          <View className="mb-6">
+            <Text className="mb-2">Password:</Text>
             <TextInput
-              className="text-gray-900 border"
-              placeholder="Password"
+              className="h-12 text-gray-900 border rounded-md px-2"
+              placeholder="********"
               value={password}
               onChangeText={(text) => setPassword(text)}
+              secureTextEntry
             />
           </View>
-          <TouchableOpacity onPress={handleSubmit}>
-            <Text className="bg-blue-500 text-center text-white px-4 py-2 rounded mb-4">
+          <TouchableOpacity 
+            onPress={handleSubmit}
+            className="h-12 items-center justify-center bg-blue-500 px-4 py-2 rounded-lg mb-4"
+          >
+            <Text className="text-white text-center">
               Login
             </Text>
           </TouchableOpacity>
