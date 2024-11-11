@@ -25,8 +25,7 @@ export default function SignupScreen() {
 
         if (existingUsers.length === 0) {
           const userData = {
-            firstName: firstName,
-            lastName: lastName,
+            fullName: (`${firstName} ${lastName}`),
             uid: user.uid,
           }
           uploadDocument("User Account", userData)
@@ -95,7 +94,7 @@ export default function SignupScreen() {
           <View className="mb-4">
             <Text className="mb-2">First Name:</Text>
             <TextInput
-              className="h-12 text-gray-900 border px-2"
+              className="h-12 text-gray-900 border rounded-md px-2"
               placeholder="John Matthew"
               value={firstName}
               onChangeText={(text) => setFirstName(text)}
@@ -105,7 +104,7 @@ export default function SignupScreen() {
           <View className="mb-4">
             <Text className="mb-2">Last Name:</Text>
             <TextInput
-              className="h-12 text-gray-900 border px-2"
+              className="h-12 text-gray-900 border rounded-md px-2"
               placeholder="Doe"
               value={lastName}
               onChangeText={(text) => setLastName(text)}
@@ -115,7 +114,7 @@ export default function SignupScreen() {
           <View className="mb-4">
             <Text className="mb-2">Email</Text>
             <TextInput
-              className="h-12 text-gray-900 border px-2"
+              className="h-12 text-gray-900 border rounded-md px-2"
               placeholder="johndoe@email.com"
               value={email}
               onChangeText={(text) => setEmail(text)}
@@ -125,7 +124,7 @@ export default function SignupScreen() {
           <View className="mb-4">
             <Text>Password</Text>
             <TextInput
-              className="h-12 text-gray-900 border px-2"
+              className="h-12 text-gray-900 border rounded-md px-2"
               placeholder="********"
               value={password}
               onChangeText={(text) => setPassword(text)}
