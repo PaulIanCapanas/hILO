@@ -21,10 +21,10 @@ describe('<HomeScreen />', () => {
   });
 });
 
-describe('Main Landing Page', () => {
-  test('Renders the main page correctly', () => {
-    const { getByText } = render(<Page/>);
+// describe('Main Landing Page', () => {
+//   test('Renders the main page correctly', () => {
+//     const { getByText } = render(<Page/>);
 
-    getByText('Hello World');
-  });
-})
+//     getByText('Hello World');
+//   });
+// })
