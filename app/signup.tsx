@@ -1,10 +1,11 @@
 import { ScrollView, View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { auth } from "@/firebase/initializeFirebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import uploadDocument from "@/helpers/firebase/uploadDocument";
 import { useRouter } from "expo-router";
 import { Routes } from "@/enums/routes";
+import queryDocument from "@/helpers/firebase/queryDocument";
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -12,6 +13,37 @@ export default function SignupScreen() {
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  useEffect(() => {
+    const unregistered = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const existingUsers = await queryDocument(
+          "User Account",
+          "uid",
+          user.uid
+        )
+
+        if (existingUsers.length === 0) {
+          const userData = {
+            firstName: firstName,
+            lastName: lastName,
+            uid: user.uid,
+          }
+          uploadDocument("User Account", userData)
+            .then((documentId) => {
+              console.log("User data uploaded successfully with ID:", documentId)
+              router.push(`/${Routes.HOME}`);
+            })
+            .catch((error) => {
+              console.log("Error uploading user data:", error)
+            })
+        } else {
+          console.log("User data already exists.")
+        }
+      }
+    })
+    return () => unregistered()
+  }, [firstName, lastName])
 
   const validateForm = useMemo(() => {
     return () => {
@@ -48,13 +80,8 @@ export default function SignupScreen() {
     if (!validateForm()) return;
 
     try {
-      await uploadDocument("User Account", {
-        firstName: firstName,
-        lastName: lastName,
-      });
       await createUserWithEmailAndPassword(auth, email, password);
       Alert.alert("Signed up successfully!");
-      router.push(`/${Routes.LOGIN}`);
     } catch (error) {
       Alert.alert("Registration failed!");
     }

@@ -3,7 +3,8 @@
   "compilerOptions": {
     "types": [
       "nativewind/types",
-      "node"
+      "node",
+      "jest",
     ],
     "jsx": "react-jsx",
     "esModuleInterop": true,
