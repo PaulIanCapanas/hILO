@@ -207,3 +207,5 @@ freeline_project_description.json
 
 expo-env.d.ts
 # @end expo-cli
+
+.idea
