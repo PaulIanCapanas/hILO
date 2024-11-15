@@ -44,6 +44,7 @@ export default function UserDetail() {
 
   return (
     <View className="flex-1 p-4">
+      <Text>User Details</Text>
         <Image
           source={{ uri: userData.photo || defaultDisplayPhoto }}
           style={{ width: 70, height: 70 }}
