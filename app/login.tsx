@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
+import { ScrollView, View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
 import { auth } from "@/firebase/initializeFirebase";
 import { useState, useMemo } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -45,39 +45,45 @@ export default function LoginScreen() {
   };
 
   return (
-    <View className="flex-1 items-center justify-center bg-slate-100">
-      <View className="w-full max-w-md px-5 py-8 bg-gray-100 rounded-lg shadow-md justify-center items-center">
-        <Text className="text-4xl mb-4">hILO</Text>
-        <View className="mb-4">
-          <Text className="mb-2">Enter your Email:</Text>
-          <TextInput
-            className="text-gray-900 border"
-            placeholder="Email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
+    <View className="h-screen">
+       <ScrollView className="bg-white">
+        <View className="w-full max-w-md px-5 py-64 inset-0 justify-center align-middle">
+          <Text className="text-4xl mb-4 text-center">hILO</Text>
+          <View className="mb-4">
+            <Text className="mb-2">Email:</Text>
+            <TextInput
+              className="h-12 text-gray-900 border rounded-md px-2"
+              placeholder="johndoe@email.com"
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+            />
+          </View>
+          <View className="mb-6">
+            <Text className="mb-2">Password:</Text>
+            <TextInput
+              className="h-12 text-gray-900 border rounded-md px-2"
+              placeholder="********"
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              secureTextEntry
+            />
+          </View>
+          <TouchableOpacity 
+            onPress={handleSubmit}
+            className="h-12 items-center justify-center bg-blue-500 px-4 py-2 rounded-lg mb-4"
+          >
+            <Text className="text-white text-center">
+              Login
+            </Text>
+          </TouchableOpacity>
+          <View className="mb-4 justify-center items-center">
+            <Text className="text-gray-500">Or</Text>
+          </View>
+          <View className="mb-4">
+            <GoogleSignIn />
+          </View>
         </View>
-        <View className="mb-4">
-          <Text className="mb-2">Enter your Password:</Text>
-          <TextInput
-            className="text-gray-900 border"
-            placeholder="Password"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-          />
-        </View>
-        <TouchableOpacity onPress={handleSubmit}>
-          <Text className="bg-blue-500 text-white px-4 py-2 rounded mb-4">
-            Login
-          </Text>
-        </TouchableOpacity>
-        <View className="mb-4 justify-center items-center">
-          <Text className="text-gray-500">Or</Text>
-        </View>
-        <View className="mb-4">
-          <GoogleSignIn />
-        </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }
