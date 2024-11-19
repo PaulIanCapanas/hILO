@@ -1,4 +1,5 @@
 import { Text } from "react-native";
+import { useEffect } from "react";
 import { useRouter, Stack } from "expo-router";
 import { Routes } from "@/enums/routes";
 
@@ -12,11 +13,18 @@ export default function AppLayout() {
     return <Text>Loading...</Text>; //SplashScreen instead of this siguro?
   }
 
-  if (!session) {
-    return router.push(`/${Routes.LOGIN}`);
-  }
+  useEffect(() => {
+    if (!session) {
+      router.push(`/${Routes.LOGIN}`);
+    } else {
+      router.push(`/${Routes.HOME}`);
+    }
+  }, [session]);
 
   return (
-    <Stack/>
+    <Stack>
+      <Stack.Screen name={Routes.USERPROFILE} options={{ headerShown: false}} />
+      <Stack.Screen name={Routes.HOME} options={{ headerShown: false }} />
+    </Stack>
   );
 }
