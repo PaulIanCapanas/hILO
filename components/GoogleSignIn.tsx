@@ -82,5 +82,6 @@ export default function GoogleSignIn() {
         />
         <Text className="text-gray-700 text-base font-medium">Sign in with Google</Text>
       </TouchableOpacity>
+   </View>
   );
 }
