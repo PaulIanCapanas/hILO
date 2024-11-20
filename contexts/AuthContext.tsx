@@ -1,9 +1,20 @@
-import React, { createContext, useContext, type PropsWithChildren, useEffect, useState } from "react";
-import { auth } from "@/firebase/initializeFirebase";
-import { onAuthStateChanged, setPersistence, browserLocalPersistence } from "firebase/auth";
+import {
+  createContext,
+  useContext,
+  type PropsWithChildren,
+  useEffect,
+  useState,
+} from 'react';
+import { auth } from '@/firebase/initializeFirebase';
+import {
+  onAuthStateChanged,
+  setPersistence,
+  browserLocalPersistence,
+} from 'firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AuthContextType {
-  logOut: () => void,
+  logOut: () => void;
   session?: string | null;
   isLoading: boolean;
 }
@@ -12,14 +23,13 @@ const AuthContext = createContext<AuthContextType>({
   logOut: () => null,
   session: null,
   isLoading: false,
-})
+});
 
 export function useSession(): AuthContextType {
   const value = useContext(AuthContext);
-  //allows usage of methods defined in said context (i.e. signout, etc.)
 
   if (!value) {
-    throw new Error("useSession must be wrapped in a <SessionProvider />");
+    throw new Error('useSession must be wrapped in a <SessionProvider />');
   }
 
   return value;
@@ -30,11 +40,29 @@ export function SessionProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<string | null>(null);
 
   useEffect(() => {
-    //user is signed in until signed out
-    setPersistence(auth, browserLocalPersistence)
+    AsyncStorage.getItem('userSession')
+      .then((session) => {
+        if (session) {
+          setSession(session);
+        }
+
+        return setPersistence(auth, browserLocalPersistence);
+      })
       .then(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-          setSession(user ? user.uid : null);
+          const newSession = user ? user.uid : null;
+
+          if (newSession) {
+            AsyncStorage.setItem('userSession', newSession).catch((error) => {
+              console.error('Error saving session:', error);
+            });
+          } else {
+            AsyncStorage.removeItem('userSession').catch((error) => {
+              console.error('Error removing session:', error);
+            });
+          }
+
+          setSession(newSession);
           setLoading(false);
         });
 
@@ -43,18 +71,21 @@ export function SessionProvider({ children }: PropsWithChildren) {
         };
       })
       .catch((error) => {
-        console.error("Error setting persistence", error);
+        console.error('Error setting session:', error);
         setLoading(false);
       });
   }, []);
 
-  const logOut = async () => { 
-    try {
-      await auth.signOut(); 
-      setSession(null); 
-    } catch (error) {
-      console.error("Error during logging out:", error);
-    }
+  const logOut = () => {
+    auth
+      .signOut()
+      .then(() => {
+        setSession(null);
+        return AsyncStorage.removeItem('userSession');
+      })
+      .catch((error) => {
+        console.error('Error during logout:', error);
+      });
   };
 
   return (
@@ -63,8 +94,9 @@ export function SessionProvider({ children }: PropsWithChildren) {
         logOut,
         session,
         isLoading,
-      }}>
+      }}
+    >
       {children}
     </AuthContext.Provider>
-  )
-} 
+  );
+}
