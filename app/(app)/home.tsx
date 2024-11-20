@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Routes } from "@/enums/routes";
-import { HelloWave } from "@/components/HelloWave";
 
 export default function Page() {
   const router = useRouter();
@@ -21,7 +20,6 @@ export default function Page() {
         >
           <Text className="text-black text-xl font-boldc">GO TO USER PROFILE</Text>
         </TouchableOpacity>
-        <HelloWave/>
       </View>
     </View>
   );
