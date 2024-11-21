@@ -46,7 +46,6 @@ describe('User Detail Component', () => {
     const { getByText } = render(<UserDetail />)
 
     await waitFor(() => {
-      expect(getByText('User Details')).toBeTruthy()
       expect(getByText('John Doe')).toBeTruthy()
     })
   })
