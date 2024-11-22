@@ -6,11 +6,7 @@ import {
   useState,
 } from 'react';
 import { auth } from '@/firebase/initializeFirebase';
-import {
-  onAuthStateChanged,
-  setPersistence,
-  browserLocalPersistence,
-} from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AuthContextType {
@@ -41,25 +37,22 @@ export function SessionProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     AsyncStorage.getItem('userSession')
-      .then((session) => {
-        if (session) {
-          setSession(session);
+      .then((storedSession) => {
+        if (storedSession) {
+          setSession(storedSession);
         }
 
-        return setPersistence(auth, browserLocalPersistence);
-      })
-      .then(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
           const newSession = user ? user.uid : null;
 
           if (newSession) {
-            AsyncStorage.setItem('userSession', newSession).catch((error) => {
-              console.error('Error saving session:', error);
-            });
+            AsyncStorage.setItem('userSession', newSession).catch((error) =>
+              console.error('Error setting session:', error),
+            );
           } else {
-            AsyncStorage.removeItem('userSession').catch((error) => {
-              console.error('Error removing session:', error);
-            });
+            AsyncStorage.removeItem('userSession').catch((error) =>
+              console.error('Error removing session:', error),
+            );
           }
 
           setSession(newSession);
@@ -71,17 +64,19 @@ export function SessionProvider({ children }: PropsWithChildren) {
         };
       })
       .catch((error) => {
-        console.error('Error setting session:', error);
+        console.error('Error initializing session:', error);
         setLoading(false);
       });
   }, []);
 
   const logOut = () => {
-    auth
-      .signOut()
+    signOut(auth)
       .then(() => {
         setSession(null);
         return AsyncStorage.removeItem('userSession');
+      })
+      .then(() => {
+        console.log('User logged out and session cleared.');
       })
       .catch((error) => {
         console.error('Error during logout:', error);

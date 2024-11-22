@@ -10,7 +10,7 @@ export default function AppLayout() {
   const router = useRouter();
 
   if (isLoading) {
-    return <Text>Loading...</Text>; //SplashScreen instead of this siguro?
+    return <Text>Loading...</Text>;
   }
 
   useEffect(() => {

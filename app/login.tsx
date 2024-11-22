@@ -1,7 +1,7 @@
 import { ScrollView, View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
-import { auth } from "@/firebase/initializeFirebase";
+// import { auth } from "@/firebase/initializeFirebase";
 import { useState, useMemo } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import GoogleSignIn from "@/components/GoogleSignIn";
 import { Routes } from "@/enums/routes";
 import { useRouter } from "expo-router";
@@ -10,6 +10,7 @@ export default function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const authy = getAuth();
 
   const validateForm = useMemo(() => {
     return () => {
@@ -36,7 +37,7 @@ export default function LoginScreen() {
     if (!validateForm()) return;
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(authy, email, password);
       Alert.alert(`User has signed in!, Welcome ${email}`);
       router.push(`/${Routes.HOME}`);
     } catch (error) {
