@@ -48,7 +48,7 @@ export default function UserDetail() {
   return (
     <View style={{ width: MENU_WIDTH }} className="flex-1">
       <View className="flex-1">
-          <View className="mb-8">
+          <View style={{marginLeft: 10, marginTop: 5}} className="mb-8">
             {userData.photo ? (
               <Image
                 source={{ uri: userData.photo }}
@@ -68,14 +68,6 @@ export default function UserDetail() {
                 : userData.name || 'User'}
             </Text>
           </View>
-      </View>
-      <View className="p-6 items-center">
-      <TouchableOpacity
-            onPress={handleLogout}
-            className="bg-red-500 px-4 py-2 rounded-full"
-          >
-            <Text className="text-white font-semibold text-xs">Logout</Text>
-          </TouchableOpacity>
       </View>
     </View>
   )

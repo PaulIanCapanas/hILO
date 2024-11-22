@@ -8,10 +8,6 @@ export default function Page() {
   const router = useRouter();
   const [isBurgerVisible, setIsBurgerVisible] = useState(false);
 
-  function handleNavigateToUserProfile() {
-    router.push(`/${Routes.USERPROFILE}`);
-  }
-
   function handleOpenBurger() {
     setIsBurgerVisible(true);
   }
@@ -22,7 +18,7 @@ export default function Page() {
 
   return (
     <View className="flex-1 bg-white">
-      <View className="absolute top-12 left-4 z-10">
+      <View className="absolute top-6 left-4 z-10">
         <TouchableOpacity onPress={handleOpenBurger}>
           <Text className="text-3xl">☰</Text>
         </TouchableOpacity>
@@ -32,12 +28,6 @@ export default function Page() {
         <Text className="text-xl text-gray-600 mb-8 text-center">
           Weaving connections: Inspiring the future of Iloilo Woven Products
         </Text>
-        <TouchableOpacity
-          className="bg-blue-500 py-4 px-8 rounded-full"
-          onPress={handleNavigateToUserProfile}
-        >
-          <Text className="text-white text-xl font-bold">GO TO USER PROFILE</Text>
-        </TouchableOpacity>
       </View>
       <Burger isVisible={isBurgerVisible} onClose={handleCloseBurger} />
     </View>

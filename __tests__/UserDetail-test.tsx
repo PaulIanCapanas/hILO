@@ -54,12 +54,4 @@ describe('User Detail Component', () => {
     const { getByText } = render(<UserDetail />)
     expect(getByText('Loading user data...')).toBeTruthy()
   })
-
-  test('logout button is rendered', async () => {
-    const { getByText } = render(<UserDetail />)
-
-    await waitFor(() => {
-      expect(getByText('Logout')).toBeTruthy()
-    })
-  })
 })
