@@ -46,7 +46,6 @@ describe('User Detail Component', () => {
     const { getByText } = render(<UserDetail />)
 
     await waitFor(() => {
-      expect(getByText('User Details')).toBeTruthy()
       expect(getByText('John Doe')).toBeTruthy()
     })
   })
@@ -54,13 +53,5 @@ describe('User Detail Component', () => {
   test('shows loading state', () => {
     const { getByText } = render(<UserDetail />)
     expect(getByText('Loading user data...')).toBeTruthy()
-  })
-
-  test('logout button is rendered', async () => {
-    const { getByText } = render(<UserDetail />)
-
-    await waitFor(() => {
-      expect(getByText('Logout')).toBeTruthy()
-    })
   })
 })

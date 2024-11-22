@@ -55,7 +55,6 @@ export default function GoogleSignIn() {
     if (response?.type === "success") {
       const { id_token } = response.params;
       const credential = GoogleAuthProvider.credential(id_token);
-      // handleNavigate();
       signInWithCredential(auth, credential)
         .then((userCredential) => {
           console.log("User signed in: ", userCredential.user);
@@ -83,6 +82,6 @@ export default function GoogleSignIn() {
         />
         <Text className="text-gray-700 text-base font-medium">Sign in with Google</Text>
       </TouchableOpacity>
-    </View>
+   </View>
   );
 }
