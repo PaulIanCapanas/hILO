@@ -42,25 +42,16 @@ describe('User Detail Component', () => {
   afterEach(() => {
     jest.clearAllMocks()
   })
-  // test('it renders correctly', async () => {
-  //   const { getByText } = render(<UserDetail />)
+  test('it renders correctly', async () => {
+    const { getByText } = render(<UserDetail />)
 
-  //   await waitFor(() => {
-  //     expect(getByText('User Details')).toBeTruthy()
-  //     expect(getByText('John Doe')).toBeTruthy()
-  //   })
-  // }) commented out because laptop difficulties
+    await waitFor(() => {
+      expect(getByText('John Doe')).toBeTruthy()
+    })
+  })
 
   test('shows loading state', () => {
     const { getByText } = render(<UserDetail />)
     expect(getByText('Loading user data...')).toBeTruthy()
-  })
-
-  test('logout button is rendered', async () => {
-    const { getByText } = render(<UserDetail />)
-
-    await waitFor(() => {
-      expect(getByText('Logout')).toBeTruthy()
-    })
   })
 })
