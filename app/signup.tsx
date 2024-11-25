@@ -1,6 +1,5 @@
 import { ScrollView, View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
 import { useState, useEffect, useMemo } from "react";
-// import { auth } from "@/firebase/initializeFirebase";
 import { createUserWithEmailAndPassword, onAuthStateChanged, getAuth } from "firebase/auth";
 import uploadDocument from "@/helpers/firebase/uploadDocument";
 import { useRouter } from "expo-router";
@@ -13,10 +12,10 @@ export default function SignupScreen() {
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const authy = getAuth();
+  const auth = getAuth();
 
   useEffect(() => {
-    const unregistered = onAuthStateChanged(authy, async (user) => {
+    const unregistered = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const existingUsers = await queryDocument(
           "User Account",
@@ -80,7 +79,7 @@ export default function SignupScreen() {
     if (!validateForm()) return;
 
     try {
-      await createUserWithEmailAndPassword(authy, email, password);
+      await createUserWithEmailAndPassword(auth, email, password);
       Alert.alert("Signed up successfully!");
     } catch (error) {
       Alert.alert("Registration failed!");
