@@ -23,7 +23,7 @@ export default function GoogleSignIn() {
 
   useEffect(() => {
     const unregistered = onAuthStateChanged(auth, async (user) => {
-      if (user) {
+      if (user && user.providerData[0].providerId === 'google.com') {
         const existingUsers = await queryDocument(
           "User Account",
           "uid",
