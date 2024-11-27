@@ -10,8 +10,6 @@ import { auth } from '@/firebase/initializeFirebase'
 import { useState, useMemo } from 'react'
 import {
   signInWithEmailAndPassword,
-  sendEmailVerification,
-  User,
 } from 'firebase/auth'
 import GoogleSignIn from '@/components/GoogleSignIn'
 import { Routes } from '@/enums/routes'
@@ -54,17 +52,6 @@ export default function LoginScreen () {
       )
       if (!userCredential.user.emailVerified) {
         await auth.signOut()
-        Alert.alert(
-          'Email Not Verified',
-          'Please verify your email before logging in. Check your inbox.',
-          [
-            {
-              text: 'Resend Verification',
-              onPress: () => sendVerificationEmail(userCredential.user),
-            },
-            { text: 'OK' },
-          ],
-        )
         return
       }
       Alert.alert(`User has signed in!, Welcome ${email}`)
@@ -73,14 +60,7 @@ export default function LoginScreen () {
       Alert.alert('User sign in has failed')
     }
   }
-  const sendVerificationEmail = async (user: User) => {
-    try {
-      await sendEmailVerification(user)
-      Alert.alert('Verification Email Sent', 'Please check your inbox.')
-    } catch (error) {
-      Alert.alert('Error', 'Could not send verification email.')
-    }
-  }
+
   return (
     <View className='flex-1 justify-center items-center bg-gray-100'>
       <ScrollView className='bg-white rounded-lg shadow-md w-full max-w-md p-6'>

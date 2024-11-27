@@ -13,7 +13,7 @@ import {
   onAuthStateChanged,
   sendEmailVerification,
   reload,
-  signOut
+  signOut,
 } from 'firebase/auth'
 import uploadDocument from '@/helpers/firebase/uploadDocument'
 import { useRouter } from 'expo-router'
@@ -83,55 +83,51 @@ export default function SignupScreen () {
       )
       backToLogin()
     } catch (error: any) {
-      const errorCode = error.code;
-      let errorMessage = 'Registration failed';
-      
-      switch(errorCode) {
+      const errorCode = error.code
+      let errorMessage = 'Registration failed'
+
+      switch (errorCode) {
         case 'auth/email-already-in-use':
-          errorMessage = 'Email is already registered';
-          break;
-        case 'auth/invalid-email':
-          errorMessage = 'Invalid email address';
-          break;
+          errorMessage = 'Email is already registered'
+          break
         case 'auth/operation-not-allowed':
-          errorMessage = 'Operation not allowed';
-          break;
-        case 'auth/weak-password':
-          errorMessage = 'Password is too weak';
-          break;
+          errorMessage = 'Operation not allowed'
+          break
       }
-      
       Alert.alert('Registration Error', errorMessage)
     }
   }
 
-  const uploadUserData = useCallback(async (user: any) => {
-    try {
-      const existingUsers = await queryDocument(
-        'User Account',
-        'uid',
-        user.uid,
-      )
-      if (existingUsers.length === 0) {
-        const userData = {
-          name: `${firstName} ${lastName}`,
-          uid: user.uid,
-          verified: true
-        }
+  const uploadUserData = useCallback(
+    async (user: any) => {
+      try {
+        const existingUsers = await queryDocument(
+          'User Account',
+          'uid',
+          user.uid,
+        )
+        if (existingUsers.length === 0) {
+          const userData = {
+            name: `${firstName} ${lastName}`,
+            uid: user.uid,
+            verified: true,
+          }
 
-        const documentId = await uploadDocument('User Account', userData)
-        console.log('User data uploaded successfully with ID:', documentId)
-      } else {
-        console.log('User data already exists.')
+          const documentId = await uploadDocument('User Account', userData)
+          console.log('User data uploaded successfully with ID:', documentId)
+        } else {
+          console.log('User data already exists.')
+        }
+      } catch (error) {
+        console.error('Error uploading user data:', error)
+        Alert.alert('Registration Error', 'Could not complete registration')
       }
-    } catch (error) {
-      console.error('Error uploading user data:', error)
-      Alert.alert('Registration Error', 'Could not complete registration')
-    }
-  }, [firstName, lastName, router])
+    },
+    [firstName, lastName, router],
+  )
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async user => {
       if (user) {
         await reload(user)
         if (user.emailVerified) {
@@ -139,16 +135,16 @@ export default function SignupScreen () {
           setWaitingForVerification(false)
         } else if (waitingForVerification) {
           Alert.alert(
-            'Verify Your Email', 
+            'Verify Your Email',
             'Please check your email and click the verification link. If you have verified, try logging in again.',
-            [{ text: 'OK' }]
+            [{ text: 'OK' }],
           )
         }
       }
     })
     return () => unsubscribe()
   }, [waitingForVerification, uploadUserData])
-  
+
   return (
     <View className='h-screen'>
       <ScrollView className='bg-slate-100'>
