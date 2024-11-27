@@ -95,6 +95,14 @@ export default function LoginScreen() {
           <View className="mb-4">
             <GoogleSignIn />
           </View>
+          <View>
+            <TouchableOpacity
+              onPress={() => router.push(`/${Routes.SIGNUP}`)}
+              className="h-12 items-center justify-center px-4 py-2 rounded-lg mb-4"
+            >
+              <Text className="text-purple-600 text-center">Don't have an account yet? Sign up here!</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </View>
