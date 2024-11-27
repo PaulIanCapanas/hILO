@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { auth } from '@/firebase/initializeFirebase';
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   sendEmailVerification,
@@ -26,7 +26,6 @@ export default function SignupScreen() {
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const auth = getAuth();
   const [waitingForVerification, setWaitingForVerification] =
     useState<boolean>(false);
 
