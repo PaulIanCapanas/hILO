@@ -9,6 +9,7 @@ import {
 import UserDetail from './UserDetail'
 import { useSession } from '@/contexts/AuthContext'
 import Modal from 'react-native-modal'
+import { red } from 'react-native-reanimated/lib/typescript/Colors'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const MENU_WIDTH = SCREEN_WIDTH * 0.75
@@ -69,7 +70,8 @@ export default function BurgerModal({
             <View className="p-6 items-center mb-5">
               <TouchableOpacity
                 onPress={handleLogOut}
-                className="bg-red-500 px-4 py-2 rounded-full"
+                className="px-4 py-2 rounded-full"
+                style={{backgroundColor: '#FF0000'}}
               >
                 <Text className="text-white font-semibold text-xs">Logout</Text>
               </TouchableOpacity>

@@ -1,73 +1,59 @@
-import { ScrollView, View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
-import { useState, useEffect, useMemo } from "react";
-import { createUserWithEmailAndPassword, onAuthStateChanged, getAuth } from "firebase/auth";
-import uploadDocument from "@/helpers/firebase/uploadDocument";
-import { useRouter } from "expo-router";
-import { Routes } from "@/enums/routes";
-import queryDocument from "@/helpers/firebase/queryDocument";
+import {
+  ScrollView,
+  View,
+  Text,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  sendEmailVerification,
+  reload,
+  signOut,
+} from 'firebase/auth';
+import uploadDocument from '@/helpers/firebase/uploadDocument';
+import { useRouter } from 'expo-router';
+import { Routes } from '@/enums/routes';
+import queryDocument from '@/helpers/firebase/queryDocument';
 
 export default function SignupScreen() {
   const router = useRouter();
-  const [firstName, setFirstName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const auth = getAuth();
-
-  useEffect(() => {
-    const unregistered = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const existingUsers = await queryDocument(
-          "User Account",
-          "uid",
-          user.uid
-        )
-
-        if (existingUsers.length === 0) {
-          const userData = {
-            fullName: (`${firstName} ${lastName}`),
-            uid: user.uid,
-          }
-          uploadDocument("User Account", userData)
-            .then((documentId) => {
-              console.log("User data uploaded successfully with ID:", documentId)
-              router.push(`/${Routes.HOME}`);
-            })
-            .catch((error) => {
-              console.log("Error uploading user data:", error)
-            })
-        } else {
-          console.log("User data already exists.")
-        }
-      }
-    })
-    return () => unregistered()
-  }, [firstName, lastName])
+  const [waitingForVerification, setWaitingForVerification] =
+    useState<boolean>(false);
 
   const validateForm = useMemo(() => {
     return () => {
       if (!firstName.trim()) {
-        Alert.alert("First name is required");
+        Alert.alert('First name is required');
         return false;
       }
 
       if (!lastName.trim()) {
-        Alert.alert("Last name is required");
+        Alert.alert('Last name is required');
         return false;
       }
       if (!email.trim()) {
-        Alert.alert("Email is required");
+        Alert.alert('Email is required');
         return false;
       } else if (!/\S+@\S+\.\S+/.test(email)) {
-        Alert.alert("Invalid email format");
+        Alert.alert('Invalid email format');
         return false;
       }
 
       if (!password.trim()) {
-        Alert.alert("Password is required");
+        Alert.alert('Password is required');
         return false;
       } else if (password.length < 8) {
-        Alert.alert("Password must at least be 8 characters long");
+        Alert.alert('Password must at least be 8 characters long');
         return false;
       }
 
@@ -75,16 +61,90 @@ export default function SignupScreen() {
     };
   }, [firstName, lastName, email, password]);
 
+  function backToLogin() {
+    return router.push(`/${Routes.LOGIN}`);
+  }
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      Alert.alert("Signed up successfully!");
-    } catch (error) {
-      Alert.alert("Registration failed!");
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      await sendEmailVerification(userCredential.user);
+      setWaitingForVerification(true);
+      await signOut(auth);
+      Alert.alert(
+        'Verification Required',
+        'A verification email has been sent. Please check your inbox and verify your email before logging in.',
+        [{ text: 'OK', onPress: () => backToLogin() }],
+      );
+      backToLogin();
+    } catch (error: any) {
+      const errorCode = error.code;
+      let errorMessage = 'Registration failed';
+
+      switch (errorCode) {
+        case 'auth/email-already-in-use':
+          errorMessage = 'Email is already registered';
+          break;
+        case 'auth/operation-not-allowed':
+          errorMessage = 'Operation not allowed';
+          break;
+      }
+      Alert.alert('Registration Error', errorMessage);
     }
   };
+
+  const uploadUserData = useCallback(
+    async (user: any) => {
+      try {
+        const existingUsers = await queryDocument(
+          'User Account',
+          'uid',
+          user.uid,
+        );
+        if (existingUsers.length === 0) {
+          const userData = {
+            name: `${firstName} ${lastName}`,
+            uid: user.uid,
+            verified: true,
+          };
+
+          const documentId = await uploadDocument('User Account', userData);
+          console.log('User data uploaded successfully with ID:', documentId);
+        } else {
+          console.log('User data already exists.');
+        }
+      } catch (error) {
+        console.error('Error uploading user data:', error);
+        Alert.alert('Registration Error', 'Could not complete registration');
+      }
+    },
+    [firstName, lastName, router],
+  );
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        await reload(user);
+        if (user.emailVerified) {
+          await uploadUserData(user);
+          setWaitingForVerification(false);
+        } else if (waitingForVerification) {
+          Alert.alert(
+            'Verify Your Email',
+            'Please check your email and click the verification link. If you have verified, try logging in again.',
+            [{ text: 'OK' }],
+          );
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, [waitingForVerification, uploadUserData]);
 
   return (
     <View className="h-screen">
@@ -131,11 +191,12 @@ export default function SignupScreen() {
               secureTextEntry
             />
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={handleSubmit}
-            className="h-12 items-center justify-center bg-blue-500 px-4 py-2 rounded-lg mb-4">
-            <Text className=" text-white text-center">
-              Register
+            className="h-12 items-center justify-center bg-blue-500 px-4 py-2 rounded-lg mb-4"
+          >
+            <Text className="text-white text-center">
+              {waitingForVerification ? 'Verification Pending' : 'Register'}
             </Text>
           </TouchableOpacity>
         </View>
