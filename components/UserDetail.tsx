@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react'
-import { TouchableOpacity, Text, View, Image, Dimensions } from 'react-native'
+import { Text, View, Image, Dimensions } from 'react-native'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/firebase/initializeFirebase'
 import queryDocument from '@/helpers/firebase/queryDocument'
-import { useSession } from '@/contexts/AuthContext'
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MENU_WIDTH = SCREEN_WIDTH * 0.75;
 
 export default function UserDetail() {
   const [userData, setUserData] = useState<any>(null)
-  const { logOut } = useSession()
+
 
   useEffect(() => {
     const unregistered = onAuthStateChanged(auth, async user => {
@@ -31,10 +30,6 @@ export default function UserDetail() {
     return () => unregistered()
   }, [])
 
-  const handleLogout = () => {
-    logOut()
-  }
-
   if (!userData) {
     return (
       <View style={{ width: MENU_WIDTH }} className="flex-1 items-center justify-center p-4">
@@ -51,21 +46,21 @@ export default function UserDetail() {
           <View style={{marginLeft: 10, marginTop: 5}} className="mb-8">
             {userData.photo ? (
               <Image
+                testID='profile-picture'
                 source={{ uri: userData.photo }}
                 style={{ width: 60, height: 60 }}
                 className="rounded-full mb-2"
               />
             ) : (
               <Image
+              testID='profile-picture'
                 source={require(defaultDisplayPhoto)}
                 style={{ width: 60, height: 60 }}
                 className="rounded-full mb-2"
               />
             )}
             <Text className="text-lg font-bold text-gray-800">
-              {userData.firstName && userData.lastName
-                ? `${userData.firstName} ${userData.lastName}`
-                : userData.name || 'User'}
+              {userData.name}
             </Text>
           </View>
       </View>

@@ -31,8 +31,7 @@ jest.mock('@/helpers/firebase/queryDocument', () => ({
   default: jest.fn().mockResolvedValue([
     {
       uid: 'test-uid',
-      firstName: 'John',
-      lastName: 'Doe',
+      name: 'test-user',
       photo: 'test-photo-url',
     },
   ]),
@@ -43,10 +42,11 @@ describe('User Detail Component', () => {
     jest.clearAllMocks()
   })
   test('it renders correctly', async () => {
-    const { getByText } = render(<UserDetail />)
+    const { getByText, getByTestId } = render(<UserDetail />)
 
     await waitFor(() => {
-      expect(getByText('John Doe')).toBeTruthy()
+      expect(getByText('test-user')).toBeTruthy()
+      expect(getByTestId('profile-picture')).toBeTruthy()
     })
   })
 

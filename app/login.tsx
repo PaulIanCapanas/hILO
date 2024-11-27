@@ -1,89 +1,104 @@
-import { ScrollView, View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
-import { auth } from "@/firebase/initializeFirebase";
-import { useState, useMemo } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import GoogleSignIn from "@/components/GoogleSignIn";
-import { Routes } from "@/enums/routes";
-import { useRouter } from "expo-router";
+import {
+  ScrollView,
+  View,
+  Text,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+} from 'react-native'
+import { auth } from '@/firebase/initializeFirebase'
+import { useState, useMemo } from 'react'
+import {
+  signInWithEmailAndPassword,
+} from 'firebase/auth'
+import GoogleSignIn from '@/components/GoogleSignIn'
+import { Routes } from '@/enums/routes'
+import { useRouter } from 'expo-router'
 
-export default function LoginScreen() {
-  const router = useRouter();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+export default function LoginScreen () {
+  const router = useRouter()
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
 
   const validateForm = useMemo(() => {
     return () => {
       if (!email.trim()) {
-        Alert.alert("Email is required");
-        return false;
+        Alert.alert('Email is required')
+        return false
       } else if (!/\S+@\S+\.\S+/.test(email)) {
-        Alert.alert("Invalid email format");
-        return false;
+        Alert.alert('Invalid email format')
+        return false
       }
 
       if (!password.trim()) {
-        Alert.alert("Password is required");
-        return false;
+        Alert.alert('Password is required')
+        return false
       } else if (password.length < 8) {
-        Alert.alert("Password must at least be 8 characters long");
-        return false;
+        Alert.alert('Password must at least be 8 characters long')
+        return false
       }
-      return true;
-    };
-  }, [email, password]);
+      return true
+    }
+  }, [email, password])
 
   const handleSubmit = async () => {
-    if (!validateForm()) return;
+    if (!validateForm()) return
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      Alert.alert(`User has signed in!, Welcome ${email}`);
-      router.push(`/${Routes.HOME}`);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      )
+      if (!userCredential.user.emailVerified) {
+        await auth.signOut()
+        return
+      }
+      Alert.alert(`User has signed in!, Welcome ${email}`)
+      router.push(`/${Routes.HOME}`)
     } catch (error) {
-      Alert.alert("User sign in has failed");
+      Alert.alert('User sign in has failed')
     }
-  };
+  }
 
   return (
-    <View className="h-screen">
-       <ScrollView className="bg-white">
-        <View className="w-full max-w-md px-5 py-64 inset-0 justify-center align-middle">
-          <Text className="text-4xl mb-4 text-center">hILO</Text>
-          <View className="mb-4">
-            <Text className="mb-2">Email:</Text>
+    <View className='flex-1 justify-center items-center bg-gray-100'>
+      <ScrollView className='bg-white rounded-lg shadow-md w-full max-w-md p-6'>
+        <View className='w-full max-w-md px-5 py-64 inset-0 justify-center'>
+          <Text className='text-4xl mb-4 text-center'>hILO</Text>
+          <View className='mb-4'>
+            <Text className='mb-2'>Email:</Text>
             <TextInput
-              className="h-12 text-gray-900 border rounded-md px-2"
-              placeholder="johndoe@email.com"
+              className='h-12 text-gray-900 border rounded-md px-2'
+              placeholder='johndoe@email.com'
               value={email}
-              onChangeText={(text) => setEmail(text)}
+              onChangeText={text => setEmail(text)}
             />
           </View>
-          <View className="mb-6">
-            <Text className="mb-2">Password:</Text>
+          <View className='mb-6'>
+            <Text className='mb-2'>Password:</Text>
             <TextInput
-              className="h-12 text-gray-900 border rounded-md px-2"
-              placeholder="********"
+              className='h-12 text-gray-900 border rounded-md px-2'
+              placeholder='********'
               value={password}
-              onChangeText={(text) => setPassword(text)}
+              onChangeText={text => setPassword(text)}
               secureTextEntry
             />
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={handleSubmit}
-            className="h-12 items-center justify-center bg-blue-500 px-4 py-2 rounded-lg mb-4"
+            className='h-12 items-center justify-center bg-blue-500 px-4 py-2 rounded-lg mb-4'
           >
-            <Text className="text-white text-center">
-              Login
-            </Text>
+            <Text className='text-white text-center'>Login</Text>
           </TouchableOpacity>
-          <View className="mb-4 justify-center items-center">
-            <Text className="text-gray-500">Or</Text>
+          <View className='mb-4 justify-center items-center'>
+            <Text className='text-gray-500'>Or</Text>
           </View>
-          <View className="mb-4">
+          <View className='mb-4'>
             <GoogleSignIn />
           </View>
         </View>
       </ScrollView>
     </View>
-  );
+  )
 }
