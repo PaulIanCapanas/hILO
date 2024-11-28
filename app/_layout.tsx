@@ -2,6 +2,7 @@ import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
+  NavigationContainer,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -35,14 +36,16 @@ export default function RootLayout() {
 
   return (
     <SessionProvider>
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(app)" options={{ headerShown: false }} />
-        <Stack.Screen name={Routes.LOGIN} options={{ headerShown: false }} />
-        <Stack.Screen name={Routes.SIGNUP} options={{ headerShown: false }} />
-        <Stack.Screen name={Routes.HOME} options={{ headerShown: false }} />
-      </Stack>
-    </ThemeProvider>
-    </SessionProvider>  
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <NavigationContainer>
+          <Stack>
+            <Stack.Screen name="(app)" options={{ headerShown: false }} />
+            <Stack.Screen name={Routes.LOGIN} options={{ headerShown: false }} />
+            <Stack.Screen name={Routes.SIGNUP} options={{ headerShown: false }} />
+            <Stack.Screen name={Routes.HOME} options={{ headerShown: false }} />
+          </Stack>
+        </NavigationContainer>
+      </ThemeProvider>
+    </SessionProvider>
   );
 }
