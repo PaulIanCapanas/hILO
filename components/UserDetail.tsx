@@ -4,6 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase/initializeFirebase';
 import queryDocument from '@/helpers/firebase/queryDocument';
 import { useSession } from '@/contexts/AuthContext';
+import { Collection } from '@/enums/collections';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MENU_WIDTH = SCREEN_WIDTH * 0.75;
@@ -16,7 +17,7 @@ export default function UserDetail() {
     const unregistered = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          const data = await queryDocument('User Account', 'uid', user.uid);
+          const data = await queryDocument(Collection.USERS, 'uid', user.uid);
           if (data.length > 0) {
             setUserData(data[0]);
           }
