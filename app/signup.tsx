@@ -19,6 +19,7 @@ import uploadDocument from '@/helpers/firebase/uploadDocument';
 import { useRouter } from 'expo-router';
 import { Routes } from '@/enums/routes';
 import queryDocument from '@/helpers/firebase/queryDocument';
+import { Collection } from '@/enums/collections';
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -102,7 +103,7 @@ export default function SignupScreen() {
     async (user: any) => {
       try {
         const existingUsers = await queryDocument(
-          'User Account',
+          Collection.USERS,
           'uid',
           user.uid,
         );
@@ -113,7 +114,7 @@ export default function SignupScreen() {
             verified: true,
           };
 
-          const documentId = await uploadDocument('User Account', userData);
+          const documentId = await uploadDocument(Collection.USERS, userData);
           console.log('User data uploaded successfully with ID:', documentId);
         } else {
           console.log('User data already exists.');
