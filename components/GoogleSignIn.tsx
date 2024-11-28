@@ -13,6 +13,7 @@ import { useRouter } from 'expo-router';
 import uploadDocument from '@/helpers/firebase/uploadDocument';
 import queryDocument from '@/helpers/firebase/queryDocument';
 import { Collection } from '@/enums/collections';
+import { User } from '@/types/user';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -32,10 +33,13 @@ export default function GoogleSignIn() {
         );
 
         if (existingUsers.length === 0) {
-          const userData = {
+          const userData: User = {
+            name: user.displayName || '',
             uid: user.uid,
-            name: user.displayName,
-            photo: user.photoURL,
+            isAdmin: false,
+            email: user.email || '',
+            photo: user.photoURL || '',
+            verified: true,
           };
           uploadDocument(Collection.USERS, userData)
             .then((docId) => {
