@@ -56,15 +56,15 @@ export default function UserDetail() {
             <Image
               testID="profile-picture"
               source={{ uri: userData.photo }}
-              style={{ width: 60, height: 60 }}
+              style={{ width: 60, height: 60, borderRadius: 50 }}
               className="rounded-full mb-2"
             />
           ) : (
             <Image
               testID="profile-picture"
               source={require(defaultDisplayPhoto)}
-              style={{ width: 60, height: 60 }}
-              className="rounded-full mb-2"
+              style={{ width: 60, height: 60, borderRadius: 50 }}
+              className="mb-2"
             />
           )}
           <Text className="text-lg font-bold text-gray-800">
