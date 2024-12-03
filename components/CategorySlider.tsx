@@ -22,9 +22,28 @@ export default function CategorySlider () {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 22, color: '#4A4459', paddingHorizontal: 15,  }}>
-        Create New Design
-      </Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingHorizontal: 15,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 22,
+            color: '#4A4459',
+            fontWeight: '500',
+            marginBottom: 20
+          }}
+        >
+          Create New Design
+        </Text>
+        <TouchableOpacity>
+          <Text style={{color: '#65558F'}}>Show all</Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={categories}
         renderItem={renderItem}
@@ -40,18 +59,16 @@ export default function CategorySlider () {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 0,
+    paddingVertical: 30,
   },
   scrollContainer: {
-    paddingVertical: 15,
     paddingHorizontal: 15,
   },
   categoryBox: {
     backgroundColor: '#E8DEF8',
-    padding: 10,
     width: 150,
-    height: 150,
-    borderRadius: 20,
+    height: 60,
+    borderRadius: 10,
     marginRight: 10,
     alignItems: 'center',
     justifyContent: 'center',

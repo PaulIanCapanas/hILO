@@ -9,12 +9,11 @@ import {
 import UserDetail from './UserDetail'
 import { useSession } from '@/contexts/AuthContext'
 import Modal from 'react-native-modal'
-import { red } from 'react-native-reanimated/lib/typescript/Colors'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const MENU_WIDTH = SCREEN_WIDTH * 0.75
 
-export default function BurgerModal({
+export default function BurgerModal ({
   isVisible,
   onClose,
 }: {
@@ -23,27 +22,27 @@ export default function BurgerModal({
 }) {
   const { logOut } = useSession()
 
-  function handleLogOut() {
+  function handleLogOut () {
     logOut()
     onClose && onClose()
   }
 
   return (
     <Modal
-      animationIn="slideInLeft"
-      animationOut="slideOutLeft"
+      animationIn='slideInLeft'
+      animationOut='slideOutLeft'
       isVisible={isVisible}
       useNativeDriver={true}
       onBackButtonPress={onClose}
       onBackdropPress={onClose}
       style={{ margin: 0 }}
     >
-      <SafeAreaView className="flex-1">
-        <View className="flex-1 flex-row justify-end">
+      <SafeAreaView className='flex-1'>
+        <View className='flex-1 flex-row justify-end'>
           <View
-            className=" flex-1"
+            className=' flex-1'
             style={{
-              backgroundColor: '#F5F5F5',
+              backgroundColor: '#E8DEF8',
               width: MENU_WIDTH,
               shadowColor: '#000',
               shadowOffset: {
@@ -55,25 +54,29 @@ export default function BurgerModal({
               elevation: 5,
             }}
           >
-            <View className="p-4 border-b border-gray-200">
+            <View className='p-4 border-b border-gray-200'>
               <TouchableOpacity
-                testID="close-button"
-                className="self-end p-2 mb-2"
+                testID='close-button'
+                style={{padding: 2, marginBottom: 2}}
                 onPress={onClose}
               >
-                <Text className="text-gray-600 text-lg">✕</Text>
+                <Text className='text-gray-600 text-lg'>✕</Text>
               </TouchableOpacity>
             </View>
-            <View className="flex-1">
+            <View className='flex-1 justify-center items-center'>
               <UserDetail />
             </View>
-            <View className="p-6 items-center mb-5">
+            <View className='p-6 items-center mb-5'>
               <TouchableOpacity
                 onPress={handleLogOut}
-                className="px-4 py-2 rounded-full"
-                style={{backgroundColor: '#FF0000'}}
+                style={{
+                  backgroundColor: '#D7C9ED',
+                  borderRadius: 10,
+                  paddingHorizontal: 30,
+                  paddingVertical: 10,
+                }}
               >
-                <Text className="text-white font-semibold text-xs">Logout</Text>
+                <Text className='text-black font-semibold text-xs'>Logout</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -89,4 +92,3 @@ export default function BurgerModal({
     </Modal>
   )
 }
-
