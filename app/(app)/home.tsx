@@ -12,6 +12,7 @@ import CategorySlider from '@/components/CategorySlider'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/firebase/initializeFirebase'
 import queryDocument from '@/helpers/firebase/queryDocument'
+import { Collection } from '@/enums/collections'
 
 export default function Page () {
   const [isBurgerVisible, setIsBurgerVisible] = useState(false)
@@ -22,7 +23,7 @@ export default function Page () {
     const unregistered = onAuthStateChanged(auth, async user => {
       if (user) {
         try {
-          const data = await queryDocument('User Account', 'uid', user.uid)
+          const data = await queryDocument(Collection.USERS, 'uid', user.uid)
           if (data.length > 0) {
             setUserData(data[0])
           }
