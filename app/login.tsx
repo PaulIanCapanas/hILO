@@ -5,6 +5,7 @@ import {
   TextInput,
   Alert,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import { useState, useMemo } from 'react';
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
@@ -61,8 +62,8 @@ export default function LoginScreen() {
   }
 
   return (
-    <View className="flex-1 justify-center items-center bg-gray-100">
-      <ScrollView className="bg-white rounded-lg shadow-md w-full max-w-md p-6">
+    <SafeAreaView className="flex-1 bg-gray-100">
+      <View className="flex-1 justify-center items-center">
         <View className="w-full max-w-md px-5 py-64 inset-0 justify-center">
           <Text className="text-4xl mb-4 text-center">hILO</Text>
           <View className="mb-4">
@@ -107,7 +108,7 @@ export default function LoginScreen() {
             </TouchableOpacity>
           </View>
         </View>
-      </ScrollView>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }
