@@ -168,7 +168,7 @@ export default function SignupScreen() {
           <Text>Password</Text>
           <TextInput
             className="h-12 text-gray-900 border rounded-md px-2"
-            placeholder="********"
+            placeholder="••••••••"
             value={password}
             onChangeText={(text) => setPassword(text)}
             secureTextEntry
