@@ -84,6 +84,7 @@ export default function SignupScreen() {
         'A verification email has been sent. Please check your inbox and verify your email before logging in.',
         [{ text: 'OK', onPress: () => backToLogin() }],
       );
+      uploadUserData(userCredential.user, firstName, lastName);
       backToLogin();
     } catch (error: any) {
       const errorCode = error.code;
@@ -116,7 +117,6 @@ export default function SignupScreen() {
             isAdmin: false,
             email: user.email,
             photo: '',
-            verified: false,
           };
 
           const documentId = await uploadDocument(Collection.USERS, userData);
@@ -131,25 +131,6 @@ export default function SignupScreen() {
     },
     [firstName, lastName, router],
   );
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        await reload(user);
-        if (user.emailVerified) {
-          await uploadUserData(user, firstName, lastName);
-          setWaitingForVerification(false);
-        } else if (waitingForVerification) {
-          Alert.alert(
-            'Verify Your Email',
-            'Please check your email and click the verification link. If you have verified, try logging in again.',
-            [{ text: 'OK' }],
-          );
-        }
-      }
-    });
-    return () => unsubscribe();
-  }, [waitingForVerification, uploadUserData]);
 
   return (
     <View className="h-screen">
