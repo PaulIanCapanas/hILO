@@ -5,14 +5,13 @@ import {
   TextInput,
   Alert,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { auth } from '@/firebase/initializeFirebase';
 import {
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
   sendEmailVerification,
-  reload,
   signOut,
 } from 'firebase/auth';
 import uploadDocument from '@/helpers/firebase/uploadDocument';
@@ -21,7 +20,6 @@ import { Routes } from '@/enums/routes';
 import queryDocument from '@/helpers/firebase/queryDocument';
 import { Collection } from '@/enums/collections';
 import { User } from '@/types/user';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -133,62 +131,58 @@ export default function SignupScreen() {
   );
 
   return (
-    <View className="h-screen">
-      <ScrollView className="bg-slate-100">
-        <SafeAreaView>
-          <View className="w-full max-w-md px-5 py-64 bg-gray-100 rounded-lg shadow-md">
-            <Text className="text-4xl mb-4 text-center">hILO</Text>
-            <View className="mb-4">
-              <Text className="mb-2">First Name:</Text>
-              <TextInput
-                className="h-12 text-gray-900 border rounded-md px-2"
-                placeholder="John Matthew"
-                value={firstName}
-                onChangeText={(text) => setFirstName(text)}
-                autoCapitalize="words"
-              />
-            </View>
-            <View className="mb-4">
-              <Text className="mb-2">Last Name:</Text>
-              <TextInput
-                className="h-12 text-gray-900 border rounded-md px-2"
-                placeholder="Doe"
-                value={lastName}
-                onChangeText={(text) => setLastName(text)}
-                autoCapitalize="words"
-              />
-            </View>
-            <View className="mb-4">
-              <Text className="mb-2">Email</Text>
-              <TextInput
-                className="h-12 text-gray-900 border rounded-md px-2"
-                placeholder="johndoe@email.com"
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                keyboardType="email-address"
-              />
-            </View>
-            <View className="mb-4">
-              <Text>Password</Text>
-              <TextInput
-                className="h-12 text-gray-900 border rounded-md px-2"
-                placeholder="********"
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                secureTextEntry
-              />
-            </View>
-            <TouchableOpacity
-              onPress={handleSubmit}
-              className="h-12 items-center justify-center bg-blue-500 px-4 py-2 rounded-lg mb-4"
-            >
-              <Text className="text-white text-center">
-                {waitingForVerification ? 'Verification Pending' : 'Register'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
-      </ScrollView>
-    </View>
+    <SafeAreaView className="h-screen bg-slate-100">
+      <View className="w-full max-w-md px-5 py-64 bg-gray-100 rounded-lg shadow-md">
+        <Text className="text-4xl mb-4 text-center">hILO</Text>
+        <View className="mb-4">
+          <Text className="mb-2">First Name:</Text>
+          <TextInput
+            className="h-12 text-gray-900 border rounded-md px-2"
+            placeholder="John Matthew"
+            value={firstName}
+            onChangeText={(text) => setFirstName(text)}
+            autoCapitalize="words"
+          />
+        </View>
+        <View className="mb-4">
+          <Text className="mb-2">Last Name:</Text>
+          <TextInput
+            className="h-12 text-gray-900 border rounded-md px-2"
+            placeholder="Doe"
+            value={lastName}
+            onChangeText={(text) => setLastName(text)}
+            autoCapitalize="words"
+          />
+        </View>
+        <View className="mb-4">
+          <Text className="mb-2">Email</Text>
+          <TextInput
+            className="h-12 text-gray-900 border rounded-md px-2"
+            placeholder="johndoe@email.com"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            keyboardType="email-address"
+          />
+        </View>
+        <View className="mb-4">
+          <Text>Password</Text>
+          <TextInput
+            className="h-12 text-gray-900 border rounded-md px-2"
+            placeholder="********"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry
+          />
+        </View>
+        <TouchableOpacity
+          onPress={handleSubmit}
+          className="h-12 items-center justify-center bg-blue-500 px-4 py-2 rounded-lg mb-4"
+        >
+          <Text className="text-white text-center">
+            {waitingForVerification ? 'Verification Pending' : 'Register'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
