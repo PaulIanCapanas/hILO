@@ -49,6 +49,7 @@ export default function LoginScreen() {
         password,
       );
       if (!userCredential.user.emailVerified) {
+        Alert.alert('Please verify your email first!');
         await auth.signOut();
         return;
       }
