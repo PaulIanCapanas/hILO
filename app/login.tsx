@@ -39,7 +39,7 @@ export default function LoginScreen() {
     };
   }, [email, password]);
 
-  const handleSubmit = async () => {
+  async function handleSubmit() {
     if (!validateForm()) return;
 
     try {
@@ -55,9 +55,9 @@ export default function LoginScreen() {
       Alert.alert(`User has signed in!, Welcome ${email}`);
       router.push(`/${Routes.HOME}`);
     } catch (error) {
-      Alert.alert('User sign in has failed');
+      Alert.alert('User sign in has failed:', (error as Error).message);
     }
-  };
+  }
 
   return (
     <View className="flex-1 justify-center items-center bg-gray-100">
@@ -100,7 +100,9 @@ export default function LoginScreen() {
               onPress={() => router.push(`/${Routes.SIGNUP}`)}
               className="h-12 items-center justify-center px-4 py-2 rounded-lg mb-4"
             >
-              <Text className="text-purple-600 text-center">Don't have an account yet? Sign up here!</Text>
+              <Text className="text-purple-600 text-center">
+                Don't have an account yet? Sign up here!
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
