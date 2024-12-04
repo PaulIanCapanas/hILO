@@ -102,7 +102,7 @@ export default function SignupScreen() {
   };
 
   const uploadUserData = useCallback(
-    async (user: any) => {
+    async (user: any, _firstName: string, _lastName: string) => {
       try {
         const existingUsers = await queryDocument(
           Collection.USERS,
@@ -111,12 +111,12 @@ export default function SignupScreen() {
         );
         if (existingUsers.length === 0) {
           const userData: User = {
-            name: `${firstName} ${lastName}`,
+            name: `${_firstName} ${_lastName}`,
             uid: user.uid,
             isAdmin: false,
             email: user.email,
             photo: '',
-            verified: true,
+            verified: false,
           };
 
           const documentId = await uploadDocument(Collection.USERS, userData);
@@ -137,7 +137,7 @@ export default function SignupScreen() {
       if (user) {
         await reload(user);
         if (user.emailVerified) {
-          await uploadUserData(user);
+          await uploadUserData(user, firstName, lastName);
           setWaitingForVerification(false);
         } else if (waitingForVerification) {
           Alert.alert(
