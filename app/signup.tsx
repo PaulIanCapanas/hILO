@@ -1,5 +1,4 @@
 import {
-  ScrollView,
   View,
   Text,
   TextInput,
