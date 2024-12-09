@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native'
+import { useRouter } from 'expo-router'
+import { Routes } from '@/enums/routes'
 
 const categories = [
   { id: '1', title: 'Plain' },
@@ -14,8 +16,16 @@ const categories = [
 ]
 
 export default function CategorySlider () {
+const router = useRouter()
+
+function navToCreateDesign(designType: string) {
+  router.push({
+    pathname: Routes.CREATEDESIGN,
+    params: { designType }
+  });
+}
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.categoryBox}>
+    <TouchableOpacity style={styles.categoryBox} onPress={() => navToCreateDesign(item.title)}>
       <Text style={styles.categoryText}>{item.title}</Text>
     </TouchableOpacity>
   )
