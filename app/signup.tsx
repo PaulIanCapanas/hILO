@@ -1,18 +1,16 @@
 import {
-  ScrollView,
   View,
   Text,
   TextInput,
   Alert,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { auth } from '@/firebase/initializeFirebase';
 import {
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
   sendEmailVerification,
-  reload,
   signOut,
 } from 'firebase/auth';
 import uploadDocument from '@/helpers/firebase/uploadDocument';
@@ -21,7 +19,6 @@ import { Routes } from '@/enums/routes';
 import queryDocument from '@/helpers/firebase/queryDocument';
 import { Collection } from '@/enums/collections';
 import { User } from '@/types/user';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -84,6 +81,7 @@ export default function SignupScreen() {
         'A verification email has been sent. Please check your inbox and verify your email before logging in.',
         [{ text: 'OK', onPress: () => backToLogin() }],
       );
+      uploadUserData(userCredential.user, firstName, lastName);
       backToLogin();
     } catch (error: any) {
       const errorCode = error.code;
@@ -102,7 +100,7 @@ export default function SignupScreen() {
   };
 
   const uploadUserData = useCallback(
-    async (user: any) => {
+    async (user: any, _firstName: string, _lastName: string) => {
       try {
         const existingUsers = await queryDocument(
           Collection.USERS,
@@ -111,12 +109,11 @@ export default function SignupScreen() {
         );
         if (existingUsers.length === 0) {
           const userData: User = {
-            name: `${firstName} ${lastName}`,
+            name: `${_firstName} ${_lastName}`,
             uid: user.uid,
             isAdmin: false,
             email: user.email,
             photo: '',
-            verified: true,
           };
 
           const documentId = await uploadDocument(Collection.USERS, userData);
@@ -132,82 +129,59 @@ export default function SignupScreen() {
     [firstName, lastName, router],
   );
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        await reload(user);
-        if (user.emailVerified) {
-          await uploadUserData(user);
-          setWaitingForVerification(false);
-        } else if (waitingForVerification) {
-          Alert.alert(
-            'Verify Your Email',
-            'Please check your email and click the verification link. If you have verified, try logging in again.',
-            [{ text: 'OK' }],
-          );
-        }
-      }
-    });
-    return () => unsubscribe();
-  }, [waitingForVerification, uploadUserData]);
-
   return (
-    <View className="h-screen">
-      <ScrollView className="bg-slate-100">
-        <SafeAreaView>
-          <View className="w-full max-w-md px-5 py-64 bg-gray-100 rounded-lg shadow-md">
-            <Text className="text-4xl mb-4 text-center">hILO</Text>
-            <View className="mb-4">
-              <Text className="mb-2">First Name:</Text>
-              <TextInput
-                className="h-12 text-gray-900 border rounded-md px-2"
-                placeholder="John Matthew"
-                value={firstName}
-                onChangeText={(text) => setFirstName(text)}
-                autoCapitalize="words"
-              />
-            </View>
-            <View className="mb-4">
-              <Text className="mb-2">Last Name:</Text>
-              <TextInput
-                className="h-12 text-gray-900 border rounded-md px-2"
-                placeholder="Doe"
-                value={lastName}
-                onChangeText={(text) => setLastName(text)}
-                autoCapitalize="words"
-              />
-            </View>
-            <View className="mb-4">
-              <Text className="mb-2">Email</Text>
-              <TextInput
-                className="h-12 text-gray-900 border rounded-md px-2"
-                placeholder="johndoe@email.com"
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                keyboardType="email-address"
-              />
-            </View>
-            <View className="mb-4">
-              <Text>Password</Text>
-              <TextInput
-                className="h-12 text-gray-900 border rounded-md px-2"
-                placeholder="********"
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                secureTextEntry
-              />
-            </View>
-            <TouchableOpacity
-              onPress={handleSubmit}
-              className="h-12 items-center justify-center bg-blue-500 px-4 py-2 rounded-lg mb-4"
-            >
-              <Text className="text-white text-center">
-                {waitingForVerification ? 'Verification Pending' : 'Register'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
-      </ScrollView>
-    </View>
+    <SafeAreaView className="h-screen bg-slate-100">
+      <View className="w-full max-w-md px-5 py-64 bg-gray-100 rounded-lg shadow-md">
+        <Text className="text-4xl mb-4 text-center">hILO</Text>
+        <View className="mb-4">
+          <Text className="mb-2">First Name:</Text>
+          <TextInput
+            className="h-12 text-gray-900 border rounded-md px-2"
+            placeholder="John Matthew"
+            value={firstName}
+            onChangeText={(text) => setFirstName(text)}
+            autoCapitalize="words"
+          />
+        </View>
+        <View className="mb-4">
+          <Text className="mb-2">Last Name:</Text>
+          <TextInput
+            className="h-12 text-gray-900 border rounded-md px-2"
+            placeholder="Doe"
+            value={lastName}
+            onChangeText={(text) => setLastName(text)}
+            autoCapitalize="words"
+          />
+        </View>
+        <View className="mb-4">
+          <Text className="mb-2">Email</Text>
+          <TextInput
+            className="h-12 text-gray-900 border rounded-md px-2"
+            placeholder="johndoe@email.com"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            keyboardType="email-address"
+          />
+        </View>
+        <View className="mb-4">
+          <Text>Password</Text>
+          <TextInput
+            className="h-12 text-gray-900 border rounded-md px-2"
+            placeholder="••••••••"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry
+          />
+        </View>
+        <TouchableOpacity
+          onPress={handleSubmit}
+          className="h-12 items-center justify-center bg-blue-500 px-4 py-2 rounded-lg mb-4"
+        >
+          <Text className="text-white text-center">
+            {waitingForVerification ? 'Verification Pending' : 'Register'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }

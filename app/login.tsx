@@ -1,10 +1,10 @@
 import {
-  ScrollView,
   View,
   Text,
   TextInput,
   Alert,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import { useState, useMemo } from 'react';
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
@@ -39,7 +39,7 @@ export default function LoginScreen() {
     };
   }, [email, password]);
 
-  const handleSubmit = async () => {
+  async function handleSubmit() {
     if (!validateForm()) return;
 
     try {
@@ -49,19 +49,20 @@ export default function LoginScreen() {
         password,
       );
       if (!userCredential.user.emailVerified) {
+        Alert.alert('Please verify your email first!');
         await auth.signOut();
         return;
       }
       Alert.alert(`User has signed in!, Welcome ${email}`);
       router.push(`/${Routes.HOME}`);
     } catch (error) {
-      Alert.alert('User sign in has failed');
+      Alert.alert('User sign in has failed:', (error as Error).message);
     }
-  };
+  }
 
   return (
-    <View className="flex-1 justify-center items-center bg-gray-100">
-      <ScrollView className="bg-white rounded-lg shadow-md w-full max-w-md p-6">
+    <SafeAreaView className="flex-1 bg-gray-100">
+      <View className="flex-1 justify-center items-center">
         <View className="w-full max-w-md px-5 py-64 inset-0 justify-center">
           <Text className="text-4xl mb-4 text-center">hILO</Text>
           <View className="mb-4">
@@ -77,7 +78,7 @@ export default function LoginScreen() {
             <Text className="mb-2">Password:</Text>
             <TextInput
               className="h-12 text-gray-900 border rounded-md px-2"
-              placeholder="********"
+              placeholder="••••••••"
               value={password}
               onChangeText={(text) => setPassword(text)}
               secureTextEntry
@@ -100,11 +101,13 @@ export default function LoginScreen() {
               onPress={() => router.push(`/${Routes.SIGNUP}`)}
               className="h-12 items-center justify-center px-4 py-2 rounded-lg mb-4"
             >
-              <Text className="text-purple-600 text-center">Don't have an account yet? Sign up here!</Text>
+              <Text className="text-purple-600 text-center">
+                Don't have an account yet? Sign up here!
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
-      </ScrollView>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }

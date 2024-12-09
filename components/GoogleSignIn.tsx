@@ -39,7 +39,6 @@ export default function GoogleSignIn() {
             isAdmin: false,
             email: user.email || '',
             photo: user.photoURL || '',
-            verified: true,
           };
           uploadDocument(Collection.USERS, userData)
             .then((docId) => {
