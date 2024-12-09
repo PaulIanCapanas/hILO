@@ -52,10 +52,10 @@ export default function CreateNewDesign () {
         onChangeText={setDescription}
         multiline
       />
+      <View style={styles.picker}>
       <Picker
         selectedValue={selectedDesignType}
         onValueChange={itemValue => setSelectedDesignType(itemValue)}
-        style={styles.picker}
         
       >
         <Picker.Item label='Plain' value='Plain' />
@@ -63,8 +63,9 @@ export default function CreateNewDesign () {
         <Picker.Item label='Checkered' value='Checkered' />
         <Picker.Item label='Others' value='Others' />
       </Picker>
-      <TouchableOpacity onPress={navToCanvasPage}>
-        <Text className='p-5 rounded-lg' style={{backgroundColor: '#D7C9ED'}}>Create</Text>
+      </View>
+      <TouchableOpacity onPress={navToCanvasPage} style={{padding: 10, alignItems: 'center', justifyContent: 'center',}}>
+        <Text style={{backgroundColor: '#D7C9ED', borderRadius: 10, paddingHorizontal: 20, paddingVertical: 10}}>Create</Text>
       </TouchableOpacity>
       </View>
     </View>
@@ -99,5 +100,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderColor: 'gray',
     borderWidth: 1,
+    justifyContent: 'center'
   },
 })
