@@ -51,7 +51,7 @@ describe('User Detail Component', () => {
   })
 
   test('shows loading state', () => {
-    const { getByText } = render(<UserDetail />)
-    expect(getByText('Loading user data...')).toBeTruthy()
+    const { getByTestId } = render(<UserDetail />)
+    expect(getByTestId('loading-indicator')).toBeTruthy()
   })
 })
