@@ -106,7 +106,7 @@ export default function Page() {
               <Text
                 style={{ color: '#4A4459', fontSize: 40, fontWeight: 'bold' }}
               >
-                {userData.name}!
+                {userData.name.split(' ')[0]}!
               </Text>
             </View>
           </View>
