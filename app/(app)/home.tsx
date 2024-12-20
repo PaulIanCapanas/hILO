@@ -1,70 +1,83 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   ImageBackground,
   ActivityIndicator,
-} from 'react-native'
-import { useRouter } from 'expo-router'
-import Burger from '@/components/Burger'
-import CategorySlider from '@/components/CategorySlider'
-import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from '@/firebase/initializeFirebase'
-import queryDocument from '@/helpers/firebase/queryDocument'
-import { Collection } from '@/enums/collections'
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import Burger from '@/components/Burger';
+import CategorySlider from '@/components/CategorySlider';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/firebase/initializeFirebase';
+import queryDocument from '@/helpers/firebase/queryDocument';
+import { Collection } from '@/enums/collections';
+import { User } from '@/types/user';
 
-export default function Page () {
-  const [isBurgerVisible, setIsBurgerVisible] = useState(false)
-  const [userData, setUserData] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+export default function Page() {
+  const [isBurgerVisible, setIsBurgerVisible] = useState(false);
+  const [userData, setUserData] = useState<User>({
+    name: '',
+    uid: '',
+    isAdmin: false,
+    email: '',
+    photo: '',
+  } as User);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unregistered = onAuthStateChanged(auth, async user => {
+    const unregistered = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          const data = await queryDocument(Collection.USERS, 'uid', user.uid)
+          const data = await queryDocument(Collection.USERS, 'uid', user.uid);
           if (data.length > 0) {
-            setUserData(data[0])
+            setUserData(data[0] as User);
           }
         } catch (error) {
-          console.error('Error fetching user data:', error)
+          console.error('Error fetching user data:', error);
         } finally {
-          setLoading(false)
+          setLoading(false);
         }
       } else {
-        setUserData(null)
-        setLoading(false)
+        setUserData({
+          name: '',
+          uid: '',
+          isAdmin: false,
+          email: '',
+          photo: '',
+        });
+        setLoading(false);
       }
-    })
+    });
 
-    return () => unregistered()
-  }, [])
+    return () => unregistered();
+  }, []);
 
-  function handleUsername () {
-    const username = userData.name.split(' ')
-    return username[0]
+  function handleUsername() {
+    const username = userData.name;
+    return username;
   }
   if (loading) {
     return (
-      <View className='flex-1 items-center justify-center p-4'>
-        <ActivityIndicator size='large' color='#65558F' />
+      <View className="flex-1 items-center justify-center p-4">
+        <ActivityIndicator size="large" color="#65558F" />
       </View>
-    )
+    );
   }
 
-  function handleOpenBurger () {
-    setIsBurgerVisible(true)
+  function handleOpenBurger() {
+    setIsBurgerVisible(true);
   }
 
-  function handleCloseBurger () {
-    setIsBurgerVisible(false)
+  function handleCloseBurger() {
+    setIsBurgerVisible(false);
   }
 
-  const header = '../../assets/images/header.jpg'
+  const header = '../../assets/images/header.jpg';
 
   return (
-    <View className='flex-1 bg-white'>
+    <View className="flex-1 bg-white">
       <ImageBackground
         source={require(header)}
         style={{
@@ -76,11 +89,11 @@ export default function Page () {
         }}
       >
         <TouchableOpacity onPress={handleOpenBurger}>
-          <Text className='text-3xl text-white ml-3'>☰</Text>
+          <Text className="text-3xl text-white ml-3">☰</Text>
         </TouchableOpacity>
       </ImageBackground>
-      <View className='flex-1'>
-        <View className='absolute top-20'>
+      <View className="flex-1">
+        <View className="absolute top-20">
           <View style={{ flex: 1, marginTop: 20 }}>
             <View
               style={{ flex: 1, justifyContent: 'center', paddingLeft: 15 }}
@@ -93,16 +106,16 @@ export default function Page () {
               <Text
                 style={{ color: '#4A4459', fontSize: 40, fontWeight: 'bold' }}
               >
-                {handleUsername()}!
+                {userData.name}!
               </Text>
             </View>
           </View>
-          <View className='mt-5'>
+          <View className="mt-5">
             <CategorySlider />
           </View>
         </View>
       </View>
       <Burger isVisible={isBurgerVisible} onClose={handleCloseBurger} />
     </View>
-  )
+  );
 }
